@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/><meta name="theme-color" content="#3b3e43"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"/><meta name="apple-mobile-web-app-status-bar-style" content="black"><meta name="format-detection" content="telephone=no"/><title>VPS使用rclone挂载Google Drive / OneDrive / Dropbox等网盘 - 周杰个人博客</title><meta name="description" content="说明 本教程只适用Debian/ Ubuntu系统，你如果的英文CentOS或者其它Linux系统，请使用以下命令安装rclone： &lt;code class=&quot;hljs nginx&quot;&gt;&lt;span class=&quot;hljs-attribute&quot;&gt;curl&lt;/span&gt; https://rclone.org/install.sh | sudo bash&lt;/code&gt; 安装rclone Debian/Ubuntu &lt;code class=&quot;hljs nginx&quot;&gt;&lt;span class=&quot;hljs-attribute&quot;&gt;wget&lt;/span&gt; https://www.moerats.com/usr/shell/rclone_debian.sh &amp;&amp; bash rclone_debian.sh&lt;/code&gt; 开始配置 &lt;code class=&quot;hljs nginx&quot;&gt;&lt;span class=&quot;hljs-attribute&quot;&gt;rclone&lt;/s...."/><meta property="og:description" content="说明 本教程只适用Debian/ Ubuntu系统，你如果的英文CentOS或者其它Linux系统，请使用以下命令安装rclone： &lt;code class=&quot;hljs nginx&quot;&gt;&lt;span class=&quot;hljs-attribute&quot;&gt;curl&lt;/span&gt; https://rclone.org/install.sh | sudo bash&lt;/code&gt; 安装rclone Debian/Ubuntu &lt;code class=&quot;hljs nginx&quot;&gt;&lt;span class=&quot;hljs-attribute&quot;&gt;wget&lt;/span&gt; https://www.moerats.com/usr/shell/rclone_debian.sh &amp;&amp; bash rclone_debian.sh&lt;/code&gt; 开始配置 &lt;code class=&quot;hljs nginx&quot;&gt;&lt;span class=&quot;hljs-attribute&quot;&gt;rclone&lt;/s...."/>    <meta name="keywords" content="blog,Solo,Java,博客,开源,zhoujie218.top"/><link rel="dns-prefetch" href="https://cdn.jsdelivr.net/gh/88250/solo@5e2ac70/src/main/resources"/><link rel="dns-prefetch" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="https://cdn.jsdelivr.net/gh/88250/solo@5e2ac70/src/main/resources"><link rel="icon" type="image/png" href="https://p.pstatp.com/origin/pgc-image/0a44c361c6cd4f13bed3eb904e322440"/><link rel="apple-touch-icon" href="https://p.pstatp.com/origin/pgc-image/0a44c361c6cd4f13bed3eb904e322440"><link rel="shortcut icon" type="image/x-icon" href="https://p.pstatp.com/origin/pgc-image/0a44c361c6cd4f13bed3eb904e322440"><meta name="copyright" content="B3log"/><meta http-equiv="Window-target" content="_top"/><meta property="og:locale" content="zh_CN"/><meta property="og:title" content="VPS使用rclone挂载Google Drive / OneDrive / Dropbox等网盘 - 周杰个人博客"/><meta property="og:site_name" content="周杰个人博客"/><meta property="og:url"      content="https://vbskycn.github.io/articles/2019/12/11/1576051122177.html?"/><meta property="og:image" content="https://p.pstatp.com/origin/pgc-image/0a44c361c6cd4f13bed3eb904e322440"/><link rel="search" type="application/opensearchdescription+xml" title="VPS使用rclone挂载Google Drive / OneDrive / Dropbox等网盘 - 周杰个人博客" href="/opensearch.xml"><link href="https://vbskycn.github.io/rss.xml" title="RSS" type="application/rss+xml" rel="alternate"/><link rel="manifest" href="https://vbskycn.github.io/manifest.json">        <link rel="canonical" href="https://vbskycn.github.io/articles/2019/12/11/1576051122177.html">        <link rel="stylesheet"
+              href="https://cdn.jsdelivr.net/gh/88250/solo@5e2ac70/src/main/resources/skins/Bubble/css/base.css?1634643031572"/>
+            <link rel="prev" title="centos服务器安装rclone自动挂载无限容量谷歌相册Google photo为磁盘" href="https://vbskycn.github.io/articles/2019/12/10/1575974114170.html">
+            <link rel="next" title="CentOS使用Rclone挂载OneDrive google photos自动备份到onedrive" href="https://vbskycn.github.io/articles/2019/12/11/1576051223210.html">
+    <script src="https://cdn.jsdelivr.net/npm/vditor@3.8.4/dist/js/icons/ant.js" async="" id="vditorIconScript"></script></head>
+<body class="fn__flex-column">
+<div id="pjax" class="fn__flex-1">
+    
+    <progress class="fn__progress"></progress>
+    <header class="header header--article">
+        <div class="wrapper header__title">
+            <h1 class="header__h1 fn__flex-inline">
+                <a href="https://vbskycn.github.io" rel="start">周杰个人博客</a>
+            </h1>
+            <h2 class="header__desc header__desc--title">记录生活点滴</h2>
+            <div class="header__desc">
+                开放世界, <br/>拥抱未来!
+
+<!-- 公告栏可使用 HTML、JavaScript，比如可以在此加入第三方统计 js -->
+            </div>
+            <svg class="header__down" id="headerDown" viewBox="0 0 32 32" width="100%" height="100%">
+                <path d="M15.992 25.304c-0 0-0 0-0.001 0-0.516 0-0.981-0.216-1.31-0.563l-0.001-0.001-14.187-14.996c-0.306-0.323-0.494-0.76-0.494-1.241 0-0.998 0.809-1.807 1.807-1.807 0.517 0 0.983 0.217 1.313 0.565l0.001 0.001 12.875 13.612 12.886-13.612c0.331-0.348 0.797-0.565 1.314-0.565 0.481 0 0.918 0.187 1.242 0.493l-0.001-0.001c0.723 0.687 0.755 1.832 0.072 2.555l-14.201 14.996c-0.33 0.348-0.795 0.564-1.311 0.564-0.001 0-0.003 0-0.004 0h0z"></path>
+            </svg>
+        </div>
+    </header>
+    <div class="side__menu">
+        <svg viewBox="0 0 32 32" width="100%" height="100%">
+            <path d="M30 18h-28c-1.1 0-2-0.9-2-2s0.9-2 2-2h28c1.1 0 2 0.9 2 2s-0.9 2-2 2zM30 6.25h-28c-1.1 0-2-0.9-2-2s0.9-2 2-2h28c1.1 0 2 0.9 2 2s-0.9 2-2 2zM2 25.75h28c1.1 0 2 0.9 2 2s-0.9 2-2 2h-28c-1.1 0-2-0.9-2-2s0.9-2 2-2z"></path>
+        </svg>
+        <span>
+            &nbsp; menu
+        </span>
+    </div>
+    <div class="side__main">
+        <div class="side__bg"></div>
+        <div class="side__panel">
+            <svg class="side__close ft__a" version="1.1" xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                 viewBox="0 0 20 20">
+                <path d="M18.362 19.324c-0.902 0.902-2.363 0.902-3.263 0l-5.098-5.827-5.098 5.825c-0.902 0.902-2.363 0.902-3.263 0-0.902-0.902-0.902-2.363 0-3.263l5.304-6.057-5.306-6.061c-0.902-0.902-0.902-2.361 0-3.263s2.361-0.902 3.263 0l5.1 5.829 5.098-5.829c0.902-0.902 2.361-0.902 3.263 0s0.902 2.363 0 3.263l-5.304 6.061 5.304 6.057c0.902 0.902 0.902 2.363 0 3.265z"></path>
+            </svg>
+
+            <div class="side__header">
+                <a href="https://vbskycn.github.io" rel="start"><img class="side__logo" alt="周杰个人博客" src="https://b3logfile.com/avatar/1633741774071_1634018612987.jpeg?imageView2/1/w/128/h/128/interlace/0/q/100"></a>
+
+                <div class="side__meta">
+                    109 文章 <br>
+                    <span data-uvstaturl="https://vbskycn.github.io">0</span> 浏览
+                    
+                </div>
+            </div>
+
+            <div class="side__title">
+                <span>ღゝ◡╹)ノ❤️</span>
+            </div>
+            <ul class="side__nav">
+                <li>
+                    <a href="https://vbskycn.github.io" rel="start">
+                            周杰个人博客
+                    </a>
+                </li>
+                    <li>
+                        <a href="/88164962-2" target="_self">关于本人</a>
+                    </li>
+                <li>
+                    <a href="https://vbskycn.github.io/categories.html">分类</a>
+                </li>
+                <li>
+                    <a href="https://vbskycn.github.io/tags.html">标签墙</a>
+                </li>
+                <li>
+                    <a href="https://vbskycn.github.io/archives.html">存档</a>
+                </li>
+                <li>
+                    <a href="https://vbskycn.github.io/links.html">友链</a>
+                </li>
+                <li>
+                    <a rel="alternate" href="https://vbskycn.github.io/rss.xml">RSS</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="article__top" style="background-image: url(http://www.zhoujie218.top/wp-content/uploads/2019/12/20191226.png?imageView2/1/w/1280/h/720/interlace/1/q/100)">
+        <div style="background-image: url(http://www.zhoujie218.top/wp-content/uploads/2019/12/20191226.png?imageView2/1/w/1280/h/720/interlace/1/q/100)"></div>
+        <canvas id="articleTop"></canvas>
+    </div>
+    <div class="article">
+        <div class="ft__center">
+            <div class="article__meta">
+                <time>
+                    2019-12-11
+                </time>
+                /
+                    <a rel="tag"
+                       href="https://vbskycn.github.io/tags/centos">centos</a> &nbsp;
+                    <a rel="tag"
+                       href="https://vbskycn.github.io/tags/google">google</a> &nbsp;
+                    <a rel="tag"
+                       href="https://vbskycn.github.io/tags/rclone">rclone</a> &nbsp;
+                    <a rel="tag"
+                       href="https://vbskycn.github.io/tags/sync">sync</a> &nbsp;
+            </div>
+            <h2 class="article__title">
+                VPS使用rclone挂载Google Drive / OneDrive / Dropbox等网盘
+            </h2>
+<div class="article__share"
+     data-title="VPS使用rclone挂载Google Drive / OneDrive / Dropbox等网盘"
+     data-blogtitle="周杰个人博客"
+     data-url="https://vbskycn.github.io/articles/2019/12/11/1576051122177.html"
+     data-avatar="https://b3logfile.com/avatar/1633741774071_1634018612987.jpeg?imageView2/1/w/128/h/128/interlace/0/q/100">
+    <span class="item" data-type="qqz">
+        <svg viewBox="0 0 32 32" width="100%" height="100%">
+            <path d="M22.824 13.989l-8.348 6.287s3.351 0.522 8.404 0.461l-0.23-1.040 7.2-6.549c0.132-0.12 0.183-0.312 0.129-0.487s-0.203-0.299-0.377-0.314l-9.492-0.856-3.708-9.213c-0.068-0.169-0.226-0.279-0.401-0.279s-0.333 0.11-0.401 0.279l-3.708 9.213-9.492 0.856c-0.174 0.015-0.323 0.139-0.377 0.314s-0.004 0.366 0.129 0.487l7.2 6.549-2.158 9.742c-0.040 0.178 0.026 0.365 0.168 0.474 0.142 0.107 0.331 0.115 0.481 0.021l8.158-5.165 8.158 5.165c0.070 0.045 0.147 0.066 0.225 0.066 0.090 0 0.18-0.029 0.256-0.086 0.142-0.109 0.208-0.295 0.168-0.474l-1.707-7.704c0.732-0.386 1.538-1.040 1.538-1.040s-3.195 1.638-14.664 0.838l8.312-6.325s-0.327-0.534-10.744-0.914c-0.697-0.026 8.493-1.83 15.281-0.305z"></path>
+        </svg>
+    </span>
+    <span class="item" data-type="wechat">
+        <svg viewBox="0 0 32 32" width="100%" height="100%">
+            <path d="M9.062 9.203c0-0.859-0.562-1.422-1.422-1.422-0.844 0-1.703 0.562-1.703 1.422 0 0.844 0.859 1.406 1.703 1.406 0.859 0 1.422-0.562 1.422-1.406zM20.672 17.125c0-0.562-0.562-1.125-1.422-1.125-0.562 0-1.125 0.562-1.125 1.125 0 0.578 0.562 1.141 1.125 1.141 0.859 0 1.422-0.562 1.422-1.141zM16.984 9.203c0-0.859-0.562-1.422-1.406-1.422-0.859 0-1.703 0.562-1.703 1.422 0 0.844 0.844 1.406 1.703 1.406 0.844 0 1.406-0.562 1.406-1.406zM26.906 17.125c0-0.562-0.578-1.125-1.422-1.125-0.562 0-1.125 0.562-1.125 1.125 0 0.578 0.562 1.141 1.125 1.141 0.844 0 1.422-0.562 1.422-1.141zM22.75 10.922c-0.359-0.047-0.719-0.063-1.094-0.063-5.375 0-9.625 4.016-9.625 8.953 0 0.828 0.125 1.625 0.359 2.375-0.359 0.031-0.703 0.047-1.063 0.047-1.422 0-2.547-0.281-3.969-0.562l-3.953 1.984 1.125-3.406c-2.828-1.984-4.531-4.547-4.531-7.656 0-5.391 5.094-9.625 11.328-9.625 5.563 0 10.453 3.391 11.422 7.953zM32 19.687c0 2.547-1.688 4.813-3.969 6.516l0.859 2.828-3.109-1.703c-1.141 0.281-2.281 0.578-3.406 0.578-5.391 0-9.625-3.688-9.625-8.219s4.234-8.219 9.625-8.219c5.094 0 9.625 3.688 9.625 8.219z"></path>
+        </svg>
+    </span>
+    <span class="item" data-type="weibo">
+        <svg viewBox="0 0 32 32" width="100%" height="100%">
+            <path d="M13.444 27.064c-5.3 0.525-9.875-1.875-10.219-5.35-0.344-3.481 3.675-6.719 8.969-7.244 5.3-0.525 9.875 1.875 10.212 5.35 0.35 3.481-3.669 6.725-8.963 7.244zM24.038 15.521c-0.45-0.137-0.762-0.225-0.525-0.819 0.512-1.287 0.563-2.394 0.006-3.188-1.038-1.481-3.881-1.406-7.137-0.037 0 0-1.025 0.444-0.762-0.363 0.5-1.613 0.425-2.956-0.356-3.737-1.769-1.769-6.469 0.069-10.5 4.1-3.013 3.006-4.763 6.212-4.763 8.981 0 5.287 6.787 8.506 13.425 8.506 8.7 0 14.494-5.056 14.494-9.069 0-2.431-2.044-3.806-3.881-4.375z"></path>
+            <path d="M29.819 5.833c-2.1-2.331-5.2-3.219-8.063-2.612v0c-0.663 0.144-1.081 0.794-0.938 1.45 0.144 0.662 0.788 1.081 1.45 0.938 2.038-0.431 4.238 0.2 5.731 1.856s1.9 3.913 1.256 5.888v0c-0.206 0.644 0.144 1.331 0.788 1.544 0.644 0.206 1.331-0.144 1.544-0.787v-0.006c0.9-2.762 0.331-5.938-1.769-8.269z"></path>
+            <path d="M26.588 8.752c-1.025-1.138-2.538-1.569-3.925-1.269-0.569 0.119-0.931 0.688-0.813 1.256 0.125 0.569 0.688 0.931 1.25 0.806v0c0.681-0.144 1.419 0.069 1.919 0.619 0.5 0.556 0.637 1.313 0.419 1.975v0c-0.175 0.55 0.125 1.15 0.681 1.331 0.556 0.175 1.15-0.125 1.331-0.681 0.438-1.356 0.163-2.906-0.863-4.037z"></path>
+            <path d="M13.738 20.771c-0.188 0.319-0.594 0.469-0.912 0.337-0.319-0.125-0.412-0.488-0.231-0.794 0.188-0.306 0.581-0.456 0.894-0.337 0.313 0.113 0.425 0.469 0.25 0.794zM12.044 22.933c-0.512 0.819-1.613 1.175-2.438 0.8-0.813-0.369-1.056-1.319-0.544-2.119 0.506-0.794 1.569-1.15 2.388-0.806 0.831 0.356 1.1 1.3 0.594 2.125zM13.969 17.146c-2.519-0.656-5.369 0.6-6.463 2.819-1.119 2.262-0.037 4.781 2.506 5.606 2.638 0.85 5.75-0.456 6.831-2.894 1.069-2.394-0.262-4.85-2.875-5.531z"></path>
+        </svg>
+    </span>
+    <span class="item" data-type="twitter">
+        <svg viewBox="0 0 32 32" width="100%" height="100%">
+            <path d="M32.003 6.075c-1.175 0.525-2.444 0.875-3.769 1.031 1.356-0.813 2.394-2.1 2.887-3.631-1.269 0.75-2.675 1.3-4.169 1.594-1.2-1.275-2.906-2.069-4.794-2.069-3.625 0-6.563 2.938-6.563 6.563 0 0.512 0.056 1.012 0.169 1.494-5.456-0.275-10.294-2.888-13.531-6.862-0.563 0.969-0.887 2.1-0.887 3.3 0 2.275 1.156 4.287 2.919 5.463-1.075-0.031-2.087-0.331-2.975-0.819 0 0.025 0 0.056 0 0.081 0 3.181 2.263 5.838 5.269 6.437-0.55 0.15-1.131 0.231-1.731 0.231-0.425 0-0.831-0.044-1.237-0.119 0.838 2.606 3.263 4.506 6.131 4.563-2.25 1.762-5.075 2.813-8.156 2.813-0.531 0-1.050-0.031-1.569-0.094 2.913 1.869 6.362 2.95 10.069 2.95 12.075 0 18.681-10.006 18.681-18.681 0-0.287-0.006-0.569-0.019-0.85 1.281-0.919 2.394-2.075 3.275-3.394z"></path>
+        </svg>
+    </span>
+    <span class="item__qr"></span>
+</div>        </div>
+        <div class="wrapper">
+            <section class="vditor-reset articles article__content">
+                <h1 id="toc_h1_0">说明</h1>
+<p><strong>本教程只适用<code>Debian</code>/&nbsp;<code>Ubuntu</code>系统，你如果的英文<code>CentOS</code>或者其它<code>Linux</code>系统，请使用以下命令安装<code>rclone</code>：</strong></p>
+<pre><code>&lt;code class="hljs nginx"&gt;&lt;span class="hljs-attribute"&gt;curl&lt;/span&gt; https://rclone.org/install.sh | sudo bash&lt;/code&gt;
+</code></pre>
+<h1 id="toc_h1_1">安装rclone</h1>
+<p><code>Debian</code>/<code>Ubuntu</code></p>
+<pre><code>&lt;code class="hljs nginx"&gt;&lt;span class="hljs-attribute"&gt;wget&lt;/span&gt; https://www.moerats.com/usr/shell/rclone_debian.sh &amp;&amp; bash rclone_debian.sh&lt;/code&gt;
+</code></pre>
+<h1 id="toc_h1_2">开始配置</h1>
+<pre><code>&lt;code class="hljs nginx"&gt;&lt;span class="hljs-attribute"&gt;rclone&lt;/span&gt; config&lt;/code&gt;
+</code></pre>
+<h1 id="toc_h1_3">详细配置过程</h1>
+<pre><code>&lt;code class="hljs sql"&gt;n) New remote
+s) &lt;span class="hljs-keyword"&gt;Set&lt;/span&gt; configuration &lt;span class="hljs-keyword"&gt;password&lt;/span&gt;
+q) Quit config
+n/s/q&gt; n   &lt;b&gt;#输入n回车，新建配置&lt;/b&gt;
+&lt;span class="hljs-keyword"&gt;name&lt;/span&gt;&gt; GD   &lt;b&gt;#新建配置的名称，随意填写，后面会用到&lt;/b&gt;
+&lt;span class="hljs-keyword"&gt;Type&lt;/span&gt; &lt;span class="hljs-keyword"&gt;of&lt;/span&gt; &lt;span class="hljs-keyword"&gt;storage&lt;/span&gt; &lt;span class="hljs-keyword"&gt;to&lt;/span&gt; configure.
+Enter a &lt;span class="hljs-keyword"&gt;string&lt;/span&gt; value. Press Enter &lt;span class="hljs-keyword"&gt;for&lt;/span&gt; the &lt;span class="hljs-keyword"&gt;default&lt;/span&gt; (&lt;span class="hljs-string"&gt;""&lt;/span&gt;).
+&lt;span class="hljs-keyword"&gt;Choose&lt;/span&gt; a &lt;span class="hljs-built_in"&gt;number&lt;/span&gt; &lt;span class="hljs-keyword"&gt;from&lt;/span&gt; below, &lt;span class="hljs-keyword"&gt;or&lt;/span&gt; &lt;span class="hljs-keyword"&gt;type&lt;/span&gt; &lt;span class="hljs-keyword"&gt;in&lt;/span&gt; your own &lt;span class="hljs-keyword"&gt;value&lt;/span&gt;
+ &lt;span class="hljs-number"&gt;1&lt;/span&gt; / &lt;span class="hljs-number"&gt;1&lt;/span&gt;Fichier
+    &lt;span class="hljs-string"&gt;"fichier"&lt;/span&gt;
+ &lt;span class="hljs-number"&gt;2&lt;/span&gt; / &lt;span class="hljs-keyword"&gt;Alias&lt;/span&gt; &lt;span class="hljs-keyword"&gt;for&lt;/span&gt; an existing remote
+    &lt;span class="hljs-string"&gt;"alias"&lt;/span&gt;
+ &lt;span class="hljs-number"&gt;3&lt;/span&gt; / Amazon Drive
+    &lt;span class="hljs-string"&gt;"amazon cloud drive"&lt;/span&gt;
+ &lt;span class="hljs-number"&gt;4&lt;/span&gt; / Amazon S3 Compliant &lt;span class="hljs-keyword"&gt;Storage&lt;/span&gt; Provider (AWS, Alibaba, Ceph, Digital Ocean, Dreamhost, IBM &lt;span class="hljs-keyword"&gt;COS&lt;/span&gt;, Minio, etc)
+    &lt;span class="hljs-string"&gt;"s3"&lt;/span&gt;
+ &lt;span class="hljs-number"&gt;5&lt;/span&gt; / Backblaze B2
+    &lt;span class="hljs-string"&gt;"b2"&lt;/span&gt;
+ &lt;span class="hljs-number"&gt;6&lt;/span&gt; / Box
+    &lt;span class="hljs-string"&gt;"box"&lt;/span&gt;
+ &lt;span class="hljs-number"&gt;7&lt;/span&gt; / &lt;span class="hljs-keyword"&gt;Cache&lt;/span&gt; a remote
+    &lt;span class="hljs-string"&gt;"cache"&lt;/span&gt;
+ &lt;span class="hljs-number"&gt;8&lt;/span&gt; / Dropbox
+    &lt;span class="hljs-string"&gt;"dropbox"&lt;/span&gt;
+ &lt;span class="hljs-number"&gt;9&lt;/span&gt; / &lt;span class="hljs-keyword"&gt;Encrypt&lt;/span&gt;/&lt;span class="hljs-keyword"&gt;Decrypt&lt;/span&gt; a remote
+    &lt;span class="hljs-string"&gt;"crypt"&lt;/span&gt;
+&lt;span class="hljs-number"&gt;10&lt;/span&gt; / &lt;span class="hljs-keyword"&gt;FTP&lt;/span&gt; &lt;span class="hljs-keyword"&gt;Connection&lt;/span&gt;
+    &lt;span class="hljs-string"&gt;"ftp"&lt;/span&gt;
+&lt;span class="hljs-number"&gt;11&lt;/span&gt; / Google Cloud &lt;span class="hljs-keyword"&gt;Storage&lt;/span&gt; (this &lt;span class="hljs-keyword"&gt;is&lt;/span&gt; &lt;span class="hljs-keyword"&gt;not&lt;/span&gt; Google Drive)
+    &lt;span class="hljs-string"&gt;"google cloud storage"&lt;/span&gt;
+&lt;span class="hljs-number"&gt;12&lt;/span&gt; / Google Drive
+    &lt;span class="hljs-string"&gt;"drive"&lt;/span&gt;
+&lt;span class="hljs-number"&gt;13&lt;/span&gt; / Google Photos
+    &lt;span class="hljs-string"&gt;"google photos"&lt;/span&gt;
+&lt;span class="hljs-number"&gt;14&lt;/span&gt; / Hubic
+    &lt;span class="hljs-string"&gt;"hubic"&lt;/span&gt;
+&lt;span class="hljs-number"&gt;15&lt;/span&gt; / JottaCloud
+    &lt;span class="hljs-string"&gt;"jottacloud"&lt;/span&gt;
+&lt;span class="hljs-number"&gt;16&lt;/span&gt; / Koofr
+    &lt;span class="hljs-string"&gt;"koofr"&lt;/span&gt;
+&lt;span class="hljs-number"&gt;17&lt;/span&gt; / &lt;span class="hljs-keyword"&gt;Local&lt;/span&gt; Disk
+    &lt;span class="hljs-string"&gt;"local"&lt;/span&gt;
+&lt;span class="hljs-number"&gt;18&lt;/span&gt; / Mega
+    &lt;span class="hljs-string"&gt;"mega"&lt;/span&gt;
+&lt;span class="hljs-number"&gt;19&lt;/span&gt; / Microsoft Azure &lt;span class="hljs-built_in"&gt;Blob&lt;/span&gt; &lt;span class="hljs-keyword"&gt;Storage&lt;/span&gt;
+    &lt;span class="hljs-string"&gt;"azureblob"&lt;/span&gt;
+&lt;span class="hljs-number"&gt;20&lt;/span&gt; / Microsoft OneDrive
+    &lt;span class="hljs-string"&gt;"onedrive"&lt;/span&gt;
+&lt;span class="hljs-number"&gt;21&lt;/span&gt; / OpenDrive
+    &lt;span class="hljs-string"&gt;"opendrive"&lt;/span&gt;
+&lt;span class="hljs-number"&gt;22&lt;/span&gt; / Openstack Swift (Rackspace Cloud Files, Memset Memstore, OVH)
+    &lt;span class="hljs-string"&gt;"swift"&lt;/span&gt;
+&lt;span class="hljs-number"&gt;23&lt;/span&gt; / Pcloud
+    &lt;span class="hljs-string"&gt;"pcloud"&lt;/span&gt;
+&lt;span class="hljs-number"&gt;24&lt;/span&gt; / Put.io
+    &lt;span class="hljs-string"&gt;"putio"&lt;/span&gt;
+&lt;span class="hljs-number"&gt;25&lt;/span&gt; / QingCloud &lt;span class="hljs-keyword"&gt;Object&lt;/span&gt; &lt;span class="hljs-keyword"&gt;Storage&lt;/span&gt;
+    &lt;span class="hljs-string"&gt;"qingstor"&lt;/span&gt;
+&lt;span class="hljs-number"&gt;26&lt;/span&gt; / SSH/SFTP &lt;span class="hljs-keyword"&gt;Connection&lt;/span&gt;
+    &lt;span class="hljs-string"&gt;"sftp"&lt;/span&gt;
+&lt;span class="hljs-number"&gt;27&lt;/span&gt; / &lt;span class="hljs-keyword"&gt;Union&lt;/span&gt; merges the &lt;span class="hljs-keyword"&gt;contents&lt;/span&gt; &lt;span class="hljs-keyword"&gt;of&lt;/span&gt; several remotes
+    &lt;span class="hljs-string"&gt;"union"&lt;/span&gt;
+&lt;span class="hljs-number"&gt;28&lt;/span&gt; / Webdav
+    &lt;span class="hljs-string"&gt;"webdav"&lt;/span&gt;
+&lt;span class="hljs-number"&gt;29&lt;/span&gt; / Yandex Disk
+    &lt;span class="hljs-string"&gt;"yandex"&lt;/span&gt;
+&lt;span class="hljs-number"&gt;30&lt;/span&gt; / &lt;span class="hljs-keyword"&gt;http&lt;/span&gt; &lt;span class="hljs-keyword"&gt;Connection&lt;/span&gt;
+    &lt;span class="hljs-string"&gt;"http"&lt;/span&gt;
+&lt;span class="hljs-number"&gt;31&lt;/span&gt; / premiumize.me
+    &lt;span class="hljs-string"&gt;"premiumizeme"&lt;/span&gt;
+&lt;span class="hljs-keyword"&gt;Storage&lt;/span&gt;&gt; &lt;span class="hljs-number"&gt;12&lt;/span&gt;       &lt;b&gt;#选择需要挂载的网盘&lt;/b&gt;
+** See &lt;span class="hljs-keyword"&gt;help&lt;/span&gt; &lt;span class="hljs-keyword"&gt;for&lt;/span&gt; drive backend &lt;span class="hljs-keyword"&gt;at&lt;/span&gt;: https://rclone.org/drive/ **
+
+Google Application &lt;span class="hljs-keyword"&gt;Client&lt;/span&gt; &lt;span class="hljs-keyword"&gt;Id&lt;/span&gt;
+Setting your own &lt;span class="hljs-keyword"&gt;is&lt;/span&gt; recommended.
+See https://rclone.org/drive/#making-your-own-&lt;span class="hljs-keyword"&gt;client&lt;/span&gt;-&lt;span class="hljs-keyword"&gt;id&lt;/span&gt; &lt;span class="hljs-keyword"&gt;for&lt;/span&gt; how &lt;span class="hljs-keyword"&gt;to&lt;/span&gt; &lt;span class="hljs-keyword"&gt;create&lt;/span&gt; your own.
+&lt;span class="hljs-keyword"&gt;If&lt;/span&gt; you leave this blank, it will &lt;span class="hljs-keyword"&gt;use&lt;/span&gt; an internal &lt;span class="hljs-keyword"&gt;key&lt;/span&gt; which &lt;span class="hljs-keyword"&gt;is&lt;/span&gt; &lt;span class="hljs-keyword"&gt;low&lt;/span&gt; performance.
+Enter a &lt;span class="hljs-keyword"&gt;string&lt;/span&gt; value. Press Enter &lt;span class="hljs-keyword"&gt;for&lt;/span&gt; the &lt;span class="hljs-keyword"&gt;default&lt;/span&gt; (&lt;span class="hljs-string"&gt;""&lt;/span&gt;).
+client_id&gt;        &lt;b&gt;#默认直接回车，或者输入自己的OAuth &lt;span class="hljs-keyword"&gt;ID&lt;/span&gt;&lt;/b&gt;
+Google Application &lt;span class="hljs-keyword"&gt;Client&lt;/span&gt; Secret
+Setting your own &lt;span class="hljs-keyword"&gt;is&lt;/span&gt; recommended.
+Enter a &lt;span class="hljs-keyword"&gt;string&lt;/span&gt; value. Press Enter &lt;span class="hljs-keyword"&gt;for&lt;/span&gt; the &lt;span class="hljs-keyword"&gt;default&lt;/span&gt; (&lt;span class="hljs-string"&gt;""&lt;/span&gt;).
+client_secret&gt;    &lt;b&gt;#默认直接回车，或者输入自己的OAuth秘锁&lt;/b&gt;
+&lt;span class="hljs-keyword"&gt;Scope&lt;/span&gt; that rclone should &lt;span class="hljs-keyword"&gt;use&lt;/span&gt; &lt;span class="hljs-keyword"&gt;when&lt;/span&gt; requesting &lt;span class="hljs-keyword"&gt;access&lt;/span&gt; &lt;span class="hljs-keyword"&gt;from&lt;/span&gt; drive.
+Enter a &lt;span class="hljs-keyword"&gt;string&lt;/span&gt; value. Press Enter &lt;span class="hljs-keyword"&gt;for&lt;/span&gt; the &lt;span class="hljs-keyword"&gt;default&lt;/span&gt; (&lt;span class="hljs-string"&gt;""&lt;/span&gt;).
+&lt;span class="hljs-keyword"&gt;Choose&lt;/span&gt; a &lt;span class="hljs-built_in"&gt;number&lt;/span&gt; &lt;span class="hljs-keyword"&gt;from&lt;/span&gt; below, &lt;span class="hljs-keyword"&gt;or&lt;/span&gt; &lt;span class="hljs-keyword"&gt;type&lt;/span&gt; &lt;span class="hljs-keyword"&gt;in&lt;/span&gt; your own &lt;span class="hljs-keyword"&gt;value&lt;/span&gt;
+ &lt;span class="hljs-number"&gt;1&lt;/span&gt; / &lt;span class="hljs-keyword"&gt;Full&lt;/span&gt; &lt;span class="hljs-keyword"&gt;access&lt;/span&gt; all files, &lt;span class="hljs-keyword"&gt;excluding&lt;/span&gt; Application &lt;span class="hljs-keyword"&gt;Data&lt;/span&gt; Folder.
+    &lt;span class="hljs-string"&gt;"drive"&lt;/span&gt;
+ &lt;span class="hljs-number"&gt;2&lt;/span&gt; / &lt;span class="hljs-keyword"&gt;Read&lt;/span&gt;-&lt;span class="hljs-keyword"&gt;only&lt;/span&gt; &lt;span class="hljs-keyword"&gt;access&lt;/span&gt; &lt;span class="hljs-keyword"&gt;to&lt;/span&gt; &lt;span class="hljs-keyword"&gt;file&lt;/span&gt; metadata &lt;span class="hljs-keyword"&gt;and&lt;/span&gt; &lt;span class="hljs-keyword"&gt;file&lt;/span&gt; contents.
+    &lt;span class="hljs-string"&gt;"drive.readonly"&lt;/span&gt;
+   / &lt;span class="hljs-keyword"&gt;Access&lt;/span&gt; &lt;span class="hljs-keyword"&gt;to&lt;/span&gt; files created &lt;span class="hljs-keyword"&gt;by&lt;/span&gt; rclone only.
+ &lt;span class="hljs-number"&gt;3&lt;/span&gt; | These &lt;span class="hljs-keyword"&gt;are&lt;/span&gt; &lt;span class="hljs-keyword"&gt;visible&lt;/span&gt; &lt;span class="hljs-keyword"&gt;in&lt;/span&gt; the drive website.
+   | &lt;span class="hljs-keyword"&gt;File&lt;/span&gt; authorization &lt;span class="hljs-keyword"&gt;is&lt;/span&gt; revoked &lt;span class="hljs-keyword"&gt;when&lt;/span&gt; the &lt;span class="hljs-keyword"&gt;user&lt;/span&gt; deauthorizes the app.
+    &lt;span class="hljs-string"&gt;"drive.file"&lt;/span&gt;
+   / Allows &lt;span class="hljs-keyword"&gt;read&lt;/span&gt; &lt;span class="hljs-keyword"&gt;and&lt;/span&gt; write &lt;span class="hljs-keyword"&gt;access&lt;/span&gt; &lt;span class="hljs-keyword"&gt;to&lt;/span&gt; the Application &lt;span class="hljs-keyword"&gt;Data&lt;/span&gt; folder.
+ &lt;span class="hljs-number"&gt;4&lt;/span&gt; | This &lt;span class="hljs-keyword"&gt;is&lt;/span&gt; &lt;span class="hljs-keyword"&gt;not&lt;/span&gt; &lt;span class="hljs-keyword"&gt;visible&lt;/span&gt; &lt;span class="hljs-keyword"&gt;in&lt;/span&gt; the drive website.
+    &lt;span class="hljs-string"&gt;"drive.appfolder"&lt;/span&gt;
+   / Allows &lt;span class="hljs-keyword"&gt;read&lt;/span&gt;-&lt;span class="hljs-keyword"&gt;only&lt;/span&gt; &lt;span class="hljs-keyword"&gt;access&lt;/span&gt; &lt;span class="hljs-keyword"&gt;to&lt;/span&gt; &lt;span class="hljs-keyword"&gt;file&lt;/span&gt; metadata but
+ &lt;span class="hljs-number"&gt;5&lt;/span&gt; | does &lt;span class="hljs-keyword"&gt;not&lt;/span&gt; &lt;span class="hljs-keyword"&gt;allow&lt;/span&gt; &lt;span class="hljs-keyword"&gt;any&lt;/span&gt; &lt;span class="hljs-keyword"&gt;access&lt;/span&gt; &lt;span class="hljs-keyword"&gt;to&lt;/span&gt; &lt;span class="hljs-keyword"&gt;read&lt;/span&gt; &lt;span class="hljs-keyword"&gt;or&lt;/span&gt; download &lt;span class="hljs-keyword"&gt;file&lt;/span&gt; content.
+    &lt;span class="hljs-string"&gt;"drive.metadata.readonly"&lt;/span&gt;
+&lt;span class="hljs-keyword"&gt;scope&lt;/span&gt;&gt; &lt;span class="hljs-number"&gt;1&lt;/span&gt;          &lt;b&gt;#默认输入&lt;span class="hljs-number"&gt;1&lt;/span&gt;回车&lt;/b&gt;
+&lt;span class="hljs-keyword"&gt;ID&lt;/span&gt; &lt;span class="hljs-keyword"&gt;of&lt;/span&gt; the root folder
+Leave blank normally.
+Fill &lt;span class="hljs-keyword"&gt;in&lt;/span&gt; &lt;span class="hljs-keyword"&gt;to&lt;/span&gt; &lt;span class="hljs-keyword"&gt;access&lt;/span&gt; &lt;span class="hljs-string"&gt;"Computers"&lt;/span&gt; folders. (see docs).
+Enter a &lt;span class="hljs-keyword"&gt;string&lt;/span&gt; value. Press Enter &lt;span class="hljs-keyword"&gt;for&lt;/span&gt; the &lt;span class="hljs-keyword"&gt;default&lt;/span&gt; (&lt;span class="hljs-string"&gt;""&lt;/span&gt;).
+root_folder_id&gt;  &lt;b&gt;#默认直接回车&lt;/b&gt;
+Service &lt;span class="hljs-keyword"&gt;Account&lt;/span&gt; Credentials &lt;span class="hljs-keyword"&gt;JSON&lt;/span&gt; &lt;span class="hljs-keyword"&gt;file&lt;/span&gt; &lt;span class="hljs-keyword"&gt;path&lt;/span&gt; 
+Leave blank normally.
+Needed &lt;span class="hljs-keyword"&gt;only&lt;/span&gt; &lt;span class="hljs-keyword"&gt;if&lt;/span&gt; you want &lt;span class="hljs-keyword"&gt;use&lt;/span&gt; SA instead &lt;span class="hljs-keyword"&gt;of&lt;/span&gt; interactive login.
+Enter a &lt;span class="hljs-keyword"&gt;string&lt;/span&gt; value. Press Enter &lt;span class="hljs-keyword"&gt;for&lt;/span&gt; the &lt;span class="hljs-keyword"&gt;default&lt;/span&gt; (&lt;span class="hljs-string"&gt;""&lt;/span&gt;).
+service_account_file&gt; 
+Edit &lt;span class="hljs-keyword"&gt;advanced&lt;/span&gt; config? (y/n)
+y) Yes
+n) &lt;span class="hljs-keyword"&gt;No&lt;/span&gt;
+y/n&gt; n           &lt;b&gt;#是否编辑高级配置，输入n回车&lt;/b&gt;
+Remote config
+&lt;span class="hljs-keyword"&gt;Use&lt;/span&gt; &lt;span class="hljs-keyword"&gt;auto&lt;/span&gt; config?
+ * Say Y &lt;span class="hljs-keyword"&gt;if&lt;/span&gt; &lt;span class="hljs-keyword"&gt;not&lt;/span&gt; sure
+ * Say N &lt;span class="hljs-keyword"&gt;if&lt;/span&gt; you &lt;span class="hljs-keyword"&gt;are&lt;/span&gt; working &lt;span class="hljs-keyword"&gt;on&lt;/span&gt; a remote &lt;span class="hljs-keyword"&gt;or&lt;/span&gt; headless machine
+y) Yes
+n) &lt;span class="hljs-keyword"&gt;No&lt;/span&gt;
+y/n&gt; n          &lt;b&gt;#是否使用自动配置，输入n回车&lt;/b&gt;
+&lt;span class="hljs-keyword"&gt;If&lt;/span&gt; your browser doesn&lt;span class="hljs-string"&gt;'t open automatically go to the following link: https://accounts.google.com/o/oauth2/XXX
+Log in and authorize rclone for access
+Enter verification code&gt; XXXX  &lt;/span&gt;&lt;b&gt;&lt;span class="hljs-string"&gt;#复制上面的链接在浏览器中打开，将得到的授权码复制到这里后回车&lt;/span&gt;&lt;/b&gt;&lt;span class="hljs-string"&gt;
+Configure this as a team drive?
+y) Yes
+n) No
+y/n&gt; y          &lt;/span&gt;&lt;b&gt;&lt;span class="hljs-string"&gt;#是否挂载团队网盘，如果没有输入n回车，需要挂载团队版输入y回车&lt;/span&gt;&lt;/b&gt;&lt;span class="hljs-string"&gt;
+Fetching team drive list...
+Choose a number from below, or type in your own value
+ 1 / SunPma
+    "0ADYACmKjlU3JUk9PVA"
+Enter a Team Drive ID&gt; 1      &lt;/span&gt;&lt;b&gt;&lt;span class="hljs-string"&gt;#选择你需要挂载的团队盘然后回车&lt;/span&gt;&lt;/b&gt;&lt;span class="hljs-string"&gt;
+--------------------
+[SUNPMAGD]
+type = drive
+scope = drive
+token = {"access_token":"XXX","expiry":"2019-10-23T14:32:06.481207275+08:00"}
+team_drive = 0ADYACmKjlU3JUk9PVA
+--------------------
+y) Yes this is OK
+e) Edit this remote
+d) Delete this remote
+y/e/d&gt; y       &lt;/span&gt;&lt;b&gt;&lt;span class="hljs-string"&gt;#默认输入y回车&lt;/span&gt;&lt;/b&gt;&lt;span class="hljs-string"&gt;
+Current remotes:
+
+Name                 Type
+====                 ====
+SUNPMAGD             drive
+
+e) Edit existing remote
+n) New remote
+d) Delete remote
+r) Rename remote
+c) Copy remote
+s) Set configuration password
+q) Quit config
+e/n/d/r/c/s/q&gt; q   &lt;/span&gt;&lt;b&gt;&lt;span class="hljs-string"&gt;#输入q回车，保存配置退出&lt;/span&gt;&lt;/b&gt;&lt;/code&gt;
+</code></pre>
+<h1 id="toc_h1_4">新建本地挂载文件夹</h1>
+<pre><code>&lt;code class="hljs nginx"&gt;&lt;span class="hljs-attribute"&gt;mkdir&lt;/span&gt; /home/GD&lt;/code&gt;
+</code></pre>
+<h1 id="toc_h1_5">挂载磁盘</h1>
+<p><strong>说明</strong></p>
+<pre><code>&lt;code class="hljs python"&gt;&lt;span class="hljs-comment"&gt;#/usr/bin/rclone mount DriveName:Folder LocalFolder &lt;/span&gt;
+下面整体代码中最上面的这条需要自己修改，不要直接复制，注意代码中有空格
+DriveName       &lt;span class="hljs-comment"&gt;#配置时填写的name&lt;/span&gt;
+Folder          &lt;span class="hljs-comment"&gt;#网盘里要挂载的文件夹名&lt;/span&gt;
+LocalFolder     &lt;span class="hljs-comment"&gt;#本地要挂载的文件夹绝对路径&lt;/span&gt;
+例：/usr/bin/rclone mount GD:VPS /home/GoogleDrive &lt;/code&gt;
+</code></pre>
+<p><strong>挂载</strong></p>
+<pre><code>&lt;code class="hljs perl"&gt;&lt;span class="hljs-comment"&gt;#下面代码是一个整体，全部复制后粘贴运行&lt;/span&gt;
+/usr/bin/rclone mount DriveName:Folder LocalFolder 
+ --&lt;span class="hljs-keyword"&gt;umask&lt;/span&gt; &lt;span class="hljs-number"&gt;0000&lt;/span&gt; 
+ --default-permissions 
+ --allow-non-empty 
+ --allow-other 
+ --transfers &lt;span class="hljs-number"&gt;1&lt;/span&gt; 
+ --buffer-size &lt;span class="hljs-number"&gt;64&lt;/span&gt;M 
+ --low-level-retries &lt;span class="hljs-number"&gt;200&lt;/span&gt;
+
+&lt;span class="hljs-comment"&gt;#如果你还涉及到读取使用，比如使用H5ai等在线播放，就在后面多加上以下三条参数&lt;/span&gt;
+--dir-cache-&lt;span class="hljs-keyword"&gt;time&lt;/span&gt; &lt;span class="hljs-number"&gt;12&lt;/span&gt;h
+--vfs-&lt;span class="hljs-keyword"&gt;read&lt;/span&gt;-chunk-size &lt;span class="hljs-number"&gt;32&lt;/span&gt;M
+--vfs-&lt;span class="hljs-keyword"&gt;read&lt;/span&gt;-chunk-size-limit &lt;span class="hljs-number"&gt;1&lt;/span&gt;G&lt;/code&gt;
+</code></pre>
+<p><strong>参数说明</strong></p>
+<pre><code>&lt;code class="hljs sql"&gt;&lt;span class="hljs-comment"&gt;--transfers：该参数是最大同时传输任务数量，如果经常传输大文件，或CPU性能不佳，建议设置为单线程，也就是设置为“1”&lt;/span&gt;
+&lt;span class="hljs-comment"&gt;--buffer-size：该参数为读取每个文件时的内存缓冲区大小，控制rclone上传和挂载的时候的内存占用&lt;/span&gt;
+&lt;span class="hljs-comment"&gt;--low-level-retries：该参数为传输文件没速度的时候重试次数，没速度的时候，单个会自动睡眠10ms起，然后再重试&lt;/span&gt;&lt;/code&gt;
+</code></pre>
+<p><strong>挂载成功后，输入<code>df -h</code>命令查看是否挂载成功；</strong></p>
+<p>[caption id="attachment_1134" align="alignnone" width="400"]<a href="http://www.zhoujie218.top/wp-content/uploads/2019/12/20191226.png" target="_blank"><img src="http://www.zhoujie218.top/wp-content/uploads/2019/12/20191226.png" alt=""></a> [/caption]</p>
+<h1 id="toc_h1_6">卸载磁盘</h1>
+<pre><code>&lt;code class="hljs nginx"&gt;&lt;span class="hljs-attribute"&gt;fusermount&lt;/span&gt; -qzu LocalFolder&lt;/code&gt;
+</code></pre>
+<p><code>LocalFolder</code><strong>为本地挂载文件夹绝对路径</strong></p>
+<h1 id="toc_h1_7">设置自启动</h1>
+<p><strong>下载并编辑脚本</strong></p>
+<pre><code>&lt;code class="hljs nginx"&gt;&lt;span class="hljs-attribute"&gt;wget&lt;/span&gt; https://www.moerats.com/usr/shell/rcloned &amp;&amp; nano rcloned&lt;/code&gt;
+</code></pre>
+<p><strong>修改以下内容：</strong></p>
+<pre><code>&lt;code class="hljs python"&gt;NAME=&lt;span class="hljs-string"&gt;""&lt;/span&gt;  &lt;span class="hljs-comment"&gt;#rclone name名，及配置时输入的name&lt;/span&gt;
+REMOTE=&lt;span class="hljs-string"&gt;''&lt;/span&gt;  &lt;span class="hljs-comment"&gt;#远程文件夹，Google Drive网盘里的挂载的一个文件夹&lt;/span&gt;
+LOCAL=&lt;span class="hljs-string"&gt;''&lt;/span&gt;  &lt;span class="hljs-comment"&gt;#挂载地址，VPS本地挂载目录&lt;/span&gt;&lt;/code&gt;
+</code></pre>
+<p><strong>设置自启</strong></p>
+<pre><code>&lt;code class="hljs sql"&gt;apt-get &lt;span class="hljs-keyword"&gt;install&lt;/span&gt; sudo -y
+mv rcloned /etc/init.d/rcloned
+chmod +x /etc/init.d/rcloned
+&lt;span class="hljs-keyword"&gt;update&lt;/span&gt;-rc.d -f rcloned &lt;span class="hljs-keyword"&gt;defaults&lt;/span&gt;
+bash /etc/init.d/rcloned &lt;span class="hljs-keyword"&gt;start&lt;/span&gt;&lt;/code&gt;
+</code></pre>
+<p><strong>检测信息显示<code>rclone</code>在运行即可；</strong></p>
+<p>[caption id="attachment_1135" align="alignnone" width="306"]<a href="http://www.zhoujie218.top/wp-content/uploads/2019/12/20191226-1.png" target="_blank"><img src="http://www.zhoujie218.top/wp-content/uploads/2019/12/20191226-1.png" alt=""></a> [/caption]</p>
+<h1 id="toc_h1_8">rclone命令</h1>
+<pre><code>&lt;code class="hljs shell"&gt;&lt;span class="hljs-meta"&gt;#&lt;/span&gt;&lt;span class="bash"&gt;&lt;span class="hljs-comment"&gt;## 文件上传&lt;/span&gt;&lt;/span&gt;
+rclone copy /home/backup gdrive:backup # 本地路径 配置名字:谷歌文件夹名字
+&lt;span class="hljs-meta"&gt;#&lt;/span&gt;&lt;span class="bash"&gt;&lt;span class="hljs-comment"&gt;## 文件下载&lt;/span&gt;&lt;/span&gt;
+rclone copy gdrive:backup /home/backup
+&lt;span class="hljs-meta"&gt;#&lt;/span&gt;&lt;span class="bash"&gt;&lt;span class="hljs-comment"&gt;## 列表&lt;/span&gt;&lt;/span&gt;
+rclone ls gdrive:backup
+rclone lsl gdrive:backup # 比上面多一个显示上传时间
+rclone lsd gdrive:backup # 只显示文件夹
+&lt;span class="hljs-meta"&gt;#&lt;/span&gt;&lt;span class="bash"&gt;&lt;span class="hljs-comment"&gt;## 新建文件夹&lt;/span&gt;&lt;/span&gt;
+rclone mkdir gdrive:backup
+&lt;span class="hljs-meta"&gt;#&lt;/span&gt;&lt;span class="bash"&gt;&lt;span class="hljs-comment"&gt;## 挂载&lt;/span&gt;&lt;/span&gt;
+rclone mount gdrive:mm /root/mm &amp;
+&lt;span class="hljs-meta"&gt;#&lt;/span&gt;&lt;span class="bash"&gt;&lt;span class="hljs-comment"&gt;## 卸载&lt;/span&gt;&lt;/span&gt;
+fusermount -u  /root/mm
+&lt;span class="hljs-meta"&gt;
+#&lt;/span&gt;&lt;span class="bash"&gt;&lt;span class="hljs-comment"&gt;### 其他 ####&lt;/span&gt;&lt;/span&gt;
+&lt;span class="hljs-meta"&gt;#&lt;/span&gt;&lt;span class="bash"&gt;&lt;span class="hljs-comment"&gt;### https://softlns.github.io/2016/11/28/rclone-guide/&lt;/span&gt;&lt;/span&gt;
+rclone config - 以控制会话的形式添加rclone的配置，配置保存在.rclone.conf文件中。
+rclone copy - 将文件从源复制到目的地址，跳过已复制完成的。
+rclone sync - 将源数据同步到目的地址，只更新目的地址的数据。   –dry-run标志来检查要复制、删除的数据
+rclone move - 将源数据移动到目的地址。
+rclone delete - 删除指定路径下的文件内容。
+rclone purge - 清空指定路径下所有文件数据。
+rclone mkdir - 创建一个新目录。
+rclone rmdir - 删除空目录。
+rclone check - 检查源和目的地址数据是否匹配。
+rclone ls - 列出指定路径下所有的文件以及文件大小和路径。
+rclone lsd - 列出指定路径下所有的目录/容器/桶。
+rclone lsl - 列出指定路径下所有文件以及修改时间、文件大小和路径。
+rclone md5sum - 为指定路径下的所有文件产生一个md5sum文件。
+rclone sha1sum - 为指定路径下的所有文件产生一个sha1sum文件。
+rclone size - 获取指定路径下，文件内容的总大小。.
+rclone version - 查看当前版本。
+rclone cleanup - 清空remote。
+rclone dedupe - 交互式查找重复文件，进行删除/重命名操作。&lt;/code&gt;
+</code></pre>
+<p><strong>相关参考：</strong>&nbsp;https&nbsp;<strong>:</strong><br>
+//moeclub.org/2017/11/28/500/<br>
+<a href="https://www.moerats.com/archives/481/" target="_blank">https://www.moerats.com/archives/481/</a><br>
+<a href="https://www.moerats.com/archives/877/" target="_blank">https://www.moerats.com/archives/877/</a></p>
+                    <div>
+                        <hr>
+
+标题：VPS使用rclone挂载Google Drive / OneDrive / Dropbox等网盘<br>
+作者：<a href="https://vbskycn.github.io" target="_blank">vbskycn</a><br>
+地址：<a href="https://vbskycn.github.io/articles/2019/12/11/1576051122177.html" target="_blank">https://vbskycn.github.io/articles/2019/12/11/1576051122177.html</a><br>
+
+<!-- 签名档内可使用 HTML、JavaScript -->
+<br>
+                    </div>
+            </section>
+        </div>
+
+    </div>
+        <div class="post__toc">
+<ul class="article__toc">
+        <li class="toc__h1">
+            <a href="#toc_h1_0">说明</a>
+        </li>
+        <li class="toc__h1">
+            <a href="#toc_h1_1">安装rclone</a>
+        </li>
+        <li class="toc__h1">
+            <a href="#toc_h1_2">开始配置</a>
+        </li>
+        <li class="toc__h1">
+            <a href="#toc_h1_3">详细配置过程</a>
+        </li>
+        <li class="toc__h1">
+            <a href="#toc_h1_4">新建本地挂载文件夹</a>
+        </li>
+        <li class="toc__h1">
+            <a href="#toc_h1_5">挂载磁盘</a>
+        </li>
+        <li class="toc__h1">
+            <a href="#toc_h1_6">卸载磁盘</a>
+        </li>
+        <li class="toc__h1">
+            <a href="#toc_h1_7">设置自启动</a>
+        </li>
+        <li class="toc__h1">
+            <a href="#toc_h1_8">rclone命令</a>
+        </li>
+</ul>        </div>
+        <div class="wrapper">
+            <div id="gitalk-container"></div>
+            <div id="vcomment"
+                 style="    margin-bottom: 40px; margin-top: 80px;
+        border: 1px solid rgba(255,255,255,0.8);
+        border-radius: 5px;
+        background: rgba(255,255,255,0.9);
+        box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+        padding: 20px;"
+                 data-name="vbskycn" data-postId="1576051122177"></div>
+            <div id="b3logsolocomments"></div>
+        </div>
+    <div class="article__bottom">
+        <div class="wrapper">
+            <div class="fn__flex">
+                <div class="item" id="randomArticles"></div>
+                <div class="item" id="relevantArticles"></div>
+            </div>
+        </div>
+    </div>
+    
+</div>
+<script type="text/javascript"
+        src="https://cdn.jsdelivr.net/gh/88250/solo@5e2ac70/src/main/resources/skins/Bubble/js/TweenMax.min.js?1634643031572"
+        charset="utf-8"></script>
+<footer class="footer">
+    <div class="wrapper">
+            <a href="https://ld246.com/member/vbskycn"
+       title="https://ld246.com/member/vbskycn"
+       class="user__site"
+       target="_blank" rel="noopener nofollow">
+        <svg viewBox="0 0 32 32" width="100%" height="100%">
+            <path fill="#d23f31" style="fill: var(--color1, #d23f31)" d="M5.787 17.226h17.033l5.954 9.528c0.47 0.752 0.003 1.361-1.042 1.361h-15.141z"></path>
+            <path d="M10.74 3.927h17.033c1.045 0 1.512 0.609 1.042 1.361l-5.954 9.528h-19.872l6.379-10.209c0.235-0.376 0.849-0.681 1.372-0.681z"></path>
+            <path d="M2.953 17.226h2.839l6.804 10.889h-1.892c-0.523 0-1.137-0.305-1.372-0.681z"></path>
+        </svg>
+    </a>
+
+        <a href="https://github.com/vbskycn"
+           title="https://github.com/vbskycn"
+           class="user__site"
+           target="_blank" rel="noopener nofollow">
+            <svg viewBox="0 0 32 32" width="100%" height="100%">
+                <path d="M16 0.331c-8.836 0-16 7.163-16 16 0 7.069 4.585 13.067 10.942 15.182 0.8 0.148 1.094-0.347 1.094-0.77 0-0.381-0.015-1.642-0.022-2.979-4.452 0.968-5.391-1.888-5.391-1.888-0.728-1.849-1.776-2.341-1.776-2.341-1.452-0.993 0.11-0.973 0.11-0.973 1.606 0.113 2.452 1.649 2.452 1.649 1.427 2.446 3.743 1.739 4.656 1.33 0.143-1.034 0.558-1.74 1.016-2.14-3.554-0.404-7.29-1.777-7.29-7.907 0-1.747 0.625-3.174 1.649-4.295-0.166-0.403-0.714-2.030 0.155-4.234 0 0 1.344-0.43 4.401 1.64 1.276-0.355 2.645-0.532 4.005-0.539 1.359 0.006 2.729 0.184 4.008 0.539 3.054-2.070 4.395-1.64 4.395-1.64 0.871 2.204 0.323 3.831 0.157 4.234 1.026 1.12 1.647 2.548 1.647 4.295 0 6.145-3.743 7.498-7.306 7.895 0.574 0.497 1.085 1.47 1.085 2.963 0 2.141-0.019 3.864-0.019 4.391 0 0.426 0.288 0.925 1.099 0.768 6.354-2.118 10.933-8.113 10.933-15.18 0-8.837-7.164-16-16-16z"></path>
+            </svg>
+        </a>
+
+        <a href="tencent://message/?uin=88164962"
+           title="88164962"
+           target="_blank"
+           class="user__site" rel="noopener nofollow">
+            <svg viewBox="0 0 32 32" width="100%" height="100%">
+                <path d="M4.821 14.393c-0.125-0.304-0.143-0.607-0.143-0.929 0-0.5 0.321-1.304 0.625-1.679-0.018-0.464 0.179-1.411 0.536-1.714 0-3.304 2.554-7.464 5.536-8.893 1.839-0.875 3.768-1.179 5.786-1.179 1.571 0 3.286 0.375 4.75 0.982 4.196 1.768 5.143 5.054 6.036 9.25l0.018 0.089c0.518 0.786 0.982 1.714 0.982 2.679 0 0.482-0.321 0.964-0.321 1.393 0 0.036 0.107 0.179 0.125 0.214 1.536 2.268 2.929 4.732 2.929 7.554 0 0.625-0.339 2.804-1.339 2.804-0.696 0-1.464-1.696-1.714-2.161-0.018-0.018-0.036-0.018-0.054-0.018l-0.089 0.071c-0.571 1.482-1.196 2.875-2.357 3.982 1.018 0.982 2.661 0.893 2.964 2.589-0.089 0.196-0.054 0.411-0.196 0.607-1.018 1.536-3.75 1.732-5.393 1.732-2.179 0-3.946-0.571-6-1.179-0.429-0.125-1.071-0.054-1.536-0.107-1.089 1.196-3.75 1.518-5.286 1.518-1.357 0-6.607-0.089-6.607-2.411 0-1 0.214-1.286 0.911-1.929 0.554-0.107 0.964-0.411 1.607-0.446 0.089 0 0.161-0.018 0.25-0.036 0.018-0.018 0.036-0.018 0.036-0.071l-0.036-0.054c-1.232-0.286-2.964-3.393-3.232-4.679l-0.089-0.054c-0.125 0-0.179 0.268-0.214 0.357-0.393 0.911-1.321 1.893-2.357 2h-0.018c-0.143 0-0.089-0.143-0.196-0.179-0.25-0.589-0.411-1.125-0.411-1.786 0-3.571 1.714-6.214 4.5-8.321z"></path>
+            </svg>
+        </a>
+ <br>
+        &copy; 2021
+        <a href="https://vbskycn.github.io">周杰个人博客</a>
+        <script type="text/javascript" src="https://js.users.51.la/20428949.js"></script>
+        <span class="footer__heart">❤️</span>
+    </div>
+</footer>
+<svg class="side__top" id="sideTop" version="1.1" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+    <path d="M26.562 13.958c0 0.72 0.583 1.303 1.303 1.303s1.303-0.583 1.303-1.303v0c0-0.72-0.583-1.303-1.303-1.303s-1.303 0.583-1.303 1.303v0zM23.305 10.7c0 0 0 0 0 0 0 0.72 0.583 1.303 1.303 1.303s1.303-0.583 1.303-1.303c0-0 0-0 0-0v0c0-0 0-0 0-0 0-0.72-0.583-1.303-1.303-1.303s-1.303 0.583-1.303 1.303c0 0 0 0 0 0v0zM20.022 7.417c0 0 0 0 0 0 0 0.72 0.583 1.303 1.303 1.303s1.303-0.583 1.303-1.303c0-0 0-0 0-0v0c0-0 0-0 0-0 0-0.72-0.583-1.303-1.303-1.303s-1.303 0.583-1.303 1.303c0 0 0 0 0 0v0zM29.67 0h-27.339c-0.677 0-1.228 0.551-1.228 1.228s0.551 1.228 1.228 1.228h11.151l-10.725 10.725c-0.476 0.476-0.476 1.253 0 1.729 0.226 0.226 0.551 0.351 0.852 0.351s0.626-0.125 0.852-0.351l10.074-10.074v25.936c0 0.677 0.551 1.228 1.228 1.228s1.228-0.551 1.228-1.228v-26.011c0.476 0.426 1.203 0.426 1.679-0.050s0.476-1.253 0-1.729l-0.576-0.576h11.577c0.677 0 1.228-0.551 1.228-1.228 0-0.626-0.551-1.178-1.228-1.178z"></path>
+</svg>
+<script>
+  var Label = {
+    speech: true,
+    servePath: "https://vbskycn.github.io",
+    staticServePath: "https://cdn.jsdelivr.net/gh/88250/solo@5e2ac70/src/main/resources",
+    luteAvailable: false,
+    hljsStyle: 'github',
+    langLabel: "zh_CN",
+    version: "4.3.1",
+    staticSite: true,
+    showCodeBlockLn: false,
+    articleId: "1576051122177",
+  }
+</script>
+<script type="text/javascript"
+        src="https://cdn.jsdelivr.net/gh/88250/solo@5e2ac70/src/main/resources/skins/Bubble/js/common.min.js?1634643031572"
+        charset="utf-8"></script>
+<script type="text/javascript"
+        src="https://cdn.jsdelivr.net/gh/88250/solo@5e2ac70/src/main/resources/skins/Bubble/js/circleMagic.min.js?1634643031572"
+        charset="utf-8"></script>
+
+    <svg viewBox="0 0 32 32" width="100%" height="100%" class="side__top side__top--toc">
+        <path d="M30 18h-28c-1.1 0-2-0.9-2-2s0.9-2 2-2h28c1.1 0 2 0.9 2 2s-0.9 2-2 2zM30 6.25h-28c-1.1 0-2-0.9-2-2s0.9-2 2-2h28c1.1 0 2 0.9 2 2s-0.9 2-2 2zM2 25.75h28c1.1 0 2 0.9 2 2s-0.9 2-2 2h-28c-1.1 0-2-0.9-2-2s0.9-2 2-2z"></path>
+    </svg>
+
+<script type="text/javascript">
+    Util.addScript('https://cdn.jsdelivr.net/gh/88250/solo@5e2ac70/src/main/resources/js/page.min.js?1634643031572', 'soloPageScript')
+    var page = new Page({
+        "commentContentCannotEmptyLabel": "评论不能为空",
+        "oId": "1576051122177",
+        "blogHost": "https://vbskycn.github.io",
+        "randomArticles1Label": "随机阅读：",
+        "externalRelevantArticles1Label": "站外相关阅读："
+    });
+    $(document).ready(function () {
+        page.load();
+    page.tips.externalRelevantArticlesDisplayCount = "0";
+        page.loadRandomArticles('<h3>随机阅读</h3>');
+        page.loadRelevantArticles('1576051122177', '<h3>相关阅读</h3>');
+    Skin.initArticle()
+    });
+</script>
+
+</body>
+</html>
+
+<!-- Generated by Latke (https://github.com/88250/latke) in 84ms, 2021/10/28 11:38:51 -->

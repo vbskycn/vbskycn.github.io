@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/><meta name="theme-color" content="#3b3e43"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes"/><meta name="apple-mobile-web-app-status-bar-style" content="black"><meta name="format-detection" content="telephone=no"/><title>ServerStatus-Toyo中文云探针安装说明 - 周杰个人博客</title><meta name="description" content="ServerStatus-Toyo版是一个酷炫高逼格的云探针，云监控，服务器云监控，多服务器探针〜，该云监控（云探针）是ServerStatus（https://github.com/tenyue/ ServerStatus）项目的优化/修改版。 在线演示：https : //tz.toyoo.pw 我的博客：https : //doub.io/shell-jc3/ 目录介绍： 客户客户端文件 服务器服务端文件 网站文件 更新说明： 2018.08.21，修改新样式，效果见https://tz.toyoo.pw 2017.10.12，负载优化，并支持CentOS6系统 2017.10.10，修改负载的增量：当前服务器上链接SSR等软件的IP总和（只要软件监听IPv6那么就能统计，例如SSH） 2017.04.30，优化手机显示式样 2017.04.29，移除主机名设定 2017.04.27，增加一键部署脚本 安装教程： http://www.nbdog.com/8364.html bash&amp;...."/><meta property="og:description" content="ServerStatus-Toyo版是一个酷炫高逼格的云探针，云监控，服务器云监控，多服务器探针〜，该云监控（云探针）是ServerStatus（https://github.com/tenyue/ ServerStatus）项目的优化/修改版。 在线演示：https : //tz.toyoo.pw 我的博客：https : //doub.io/shell-jc3/ 目录介绍： 客户客户端文件 服务器服务端文件 网站文件 更新说明： 2018.08.21，修改新样式，效果见https://tz.toyoo.pw 2017.10.12，负载优化，并支持CentOS6系统 2017.10.10，修改负载的增量：当前服务器上链接SSR等软件的IP总和（只要软件监听IPv6那么就能统计，例如SSH） 2017.04.30，优化手机显示式样 2017.04.29，移除主机名设定 2017.04.27，增加一键部署脚本 安装教程： http://www.nbdog.com/8364.html bash&amp;...."/>    <meta name="keywords" content="blog,Solo,Java,博客,开源,zhoujie218.top"/><link rel="dns-prefetch" href="https://cdn.jsdelivr.net/gh/88250/solo@5e2ac70/src/main/resources"/><link rel="dns-prefetch" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="https://cdn.jsdelivr.net/gh/88250/solo@5e2ac70/src/main/resources"><link rel="icon" type="image/png" href="https://p.pstatp.com/origin/pgc-image/0a44c361c6cd4f13bed3eb904e322440"/><link rel="apple-touch-icon" href="https://p.pstatp.com/origin/pgc-image/0a44c361c6cd4f13bed3eb904e322440"><link rel="shortcut icon" type="image/x-icon" href="https://p.pstatp.com/origin/pgc-image/0a44c361c6cd4f13bed3eb904e322440"><meta name="copyright" content="B3log"/><meta http-equiv="Window-target" content="_top"/><meta property="og:locale" content="zh_CN"/><meta property="og:title" content="ServerStatus-Toyo中文云探针安装说明 - 周杰个人博客"/><meta property="og:site_name" content="周杰个人博客"/><meta property="og:url"      content="https://vbskycn.github.io/articles/2019/12/01/1575180556118.html?"/><meta property="og:image" content="https://p.pstatp.com/origin/pgc-image/0a44c361c6cd4f13bed3eb904e322440"/><link rel="search" type="application/opensearchdescription+xml" title="ServerStatus-Toyo中文云探针安装说明 - 周杰个人博客" href="/opensearch.xml"><link href="https://vbskycn.github.io/rss.xml" title="RSS" type="application/rss+xml" rel="alternate"/><link rel="manifest" href="https://vbskycn.github.io/manifest.json">        <link rel="canonical" href="https://vbskycn.github.io/articles/2019/12/01/1575180556118.html">        <link rel="stylesheet"
+              href="https://cdn.jsdelivr.net/gh/88250/solo@5e2ac70/src/main/resources/skins/Bubble/css/base.css?1634643031572"/>
+            <link rel="prev" title="如何使用iperf3测试线路传输速度" href="https://vbskycn.github.io/articles/2019/11/30/1575095961002.html">
+            <link rel="next" title="Centos7下查看各进程的网络速率情况" href="https://vbskycn.github.io/articles/2019/12/01/1575182776234.html">
+    <script src="https://cdn.jsdelivr.net/npm/vditor@3.8.4/dist/js/icons/ant.js" async="" id="vditorIconScript"></script></head>
+<body class="fn__flex-column">
+<div id="pjax" class="fn__flex-1">
+    
+    <progress class="fn__progress"></progress>
+    <header class="header header--article">
+        <div class="wrapper header__title">
+            <h1 class="header__h1 fn__flex-inline">
+                <a href="https://vbskycn.github.io" rel="start">周杰个人博客</a>
+            </h1>
+            <h2 class="header__desc header__desc--title">记录生活点滴</h2>
+            <div class="header__desc">
+                开放世界, <br/>拥抱未来!
+
+<!-- 公告栏可使用 HTML、JavaScript，比如可以在此加入第三方统计 js -->
+            </div>
+            <svg class="header__down" id="headerDown" viewBox="0 0 32 32" width="100%" height="100%">
+                <path d="M15.992 25.304c-0 0-0 0-0.001 0-0.516 0-0.981-0.216-1.31-0.563l-0.001-0.001-14.187-14.996c-0.306-0.323-0.494-0.76-0.494-1.241 0-0.998 0.809-1.807 1.807-1.807 0.517 0 0.983 0.217 1.313 0.565l0.001 0.001 12.875 13.612 12.886-13.612c0.331-0.348 0.797-0.565 1.314-0.565 0.481 0 0.918 0.187 1.242 0.493l-0.001-0.001c0.723 0.687 0.755 1.832 0.072 2.555l-14.201 14.996c-0.33 0.348-0.795 0.564-1.311 0.564-0.001 0-0.003 0-0.004 0h0z"></path>
+            </svg>
+        </div>
+    </header>
+    <div class="side__menu">
+        <svg viewBox="0 0 32 32" width="100%" height="100%">
+            <path d="M30 18h-28c-1.1 0-2-0.9-2-2s0.9-2 2-2h28c1.1 0 2 0.9 2 2s-0.9 2-2 2zM30 6.25h-28c-1.1 0-2-0.9-2-2s0.9-2 2-2h28c1.1 0 2 0.9 2 2s-0.9 2-2 2zM2 25.75h28c1.1 0 2 0.9 2 2s-0.9 2-2 2h-28c-1.1 0-2-0.9-2-2s0.9-2 2-2z"></path>
+        </svg>
+        <span>
+            &nbsp; menu
+        </span>
+    </div>
+    <div class="side__main">
+        <div class="side__bg"></div>
+        <div class="side__panel">
+            <svg class="side__close ft__a" version="1.1" xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                 viewBox="0 0 20 20">
+                <path d="M18.362 19.324c-0.902 0.902-2.363 0.902-3.263 0l-5.098-5.827-5.098 5.825c-0.902 0.902-2.363 0.902-3.263 0-0.902-0.902-0.902-2.363 0-3.263l5.304-6.057-5.306-6.061c-0.902-0.902-0.902-2.361 0-3.263s2.361-0.902 3.263 0l5.1 5.829 5.098-5.829c0.902-0.902 2.361-0.902 3.263 0s0.902 2.363 0 3.263l-5.304 6.061 5.304 6.057c0.902 0.902 0.902 2.363 0 3.265z"></path>
+            </svg>
+
+            <div class="side__header">
+                <a href="https://vbskycn.github.io" rel="start"><img class="side__logo" alt="周杰个人博客" src="https://b3logfile.com/avatar/1633741774071_1634018612987.jpeg?imageView2/1/w/128/h/128/interlace/0/q/100"></a>
+
+                <div class="side__meta">
+                    109 文章 <br>
+                    <span data-uvstaturl="https://vbskycn.github.io">0</span> 浏览
+                    
+                </div>
+            </div>
+
+            <div class="side__title">
+                <span>ღゝ◡╹)ノ❤️</span>
+            </div>
+            <ul class="side__nav">
+                <li>
+                    <a href="https://vbskycn.github.io" rel="start">
+                            周杰个人博客
+                    </a>
+                </li>
+                    <li>
+                        <a href="/88164962-2" target="_self">关于本人</a>
+                    </li>
+                <li>
+                    <a href="https://vbskycn.github.io/categories.html">分类</a>
+                </li>
+                <li>
+                    <a href="https://vbskycn.github.io/tags.html">标签墙</a>
+                </li>
+                <li>
+                    <a href="https://vbskycn.github.io/archives.html">存档</a>
+                </li>
+                <li>
+                    <a href="https://vbskycn.github.io/links.html">友链</a>
+                </li>
+                <li>
+                    <a rel="alternate" href="https://vbskycn.github.io/rss.xml">RSS</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="article__top" style="background-image: url(https://www.zhoujie218.top/wp-content/uploads/2020/09/unnamed-file-34-1024x286.png?imageView2/1/w/1280/h/720/interlace/1/q/100)">
+        <div style="background-image: url(https://www.zhoujie218.top/wp-content/uploads/2020/09/unnamed-file-34-1024x286.png?imageView2/1/w/1280/h/720/interlace/1/q/100)"></div>
+        <canvas id="articleTop"></canvas>
+    </div>
+    <div class="article">
+        <div class="ft__center">
+            <div class="article__meta">
+                <time>
+                    2019-12-01
+                </time>
+                /
+                    <a rel="tag"
+                       href="https://vbskycn.github.io/tags/status">status</a> &nbsp;
+            </div>
+            <h2 class="article__title">
+                ServerStatus-Toyo中文云探针安装说明
+            </h2>
+<div class="article__share"
+     data-title="ServerStatus-Toyo中文云探针安装说明"
+     data-blogtitle="周杰个人博客"
+     data-url="https://vbskycn.github.io/articles/2019/12/01/1575180556118.html"
+     data-avatar="https://b3logfile.com/avatar/1633741774071_1634018612987.jpeg?imageView2/1/w/128/h/128/interlace/0/q/100">
+    <span class="item" data-type="qqz">
+        <svg viewBox="0 0 32 32" width="100%" height="100%">
+            <path d="M22.824 13.989l-8.348 6.287s3.351 0.522 8.404 0.461l-0.23-1.040 7.2-6.549c0.132-0.12 0.183-0.312 0.129-0.487s-0.203-0.299-0.377-0.314l-9.492-0.856-3.708-9.213c-0.068-0.169-0.226-0.279-0.401-0.279s-0.333 0.11-0.401 0.279l-3.708 9.213-9.492 0.856c-0.174 0.015-0.323 0.139-0.377 0.314s-0.004 0.366 0.129 0.487l7.2 6.549-2.158 9.742c-0.040 0.178 0.026 0.365 0.168 0.474 0.142 0.107 0.331 0.115 0.481 0.021l8.158-5.165 8.158 5.165c0.070 0.045 0.147 0.066 0.225 0.066 0.090 0 0.18-0.029 0.256-0.086 0.142-0.109 0.208-0.295 0.168-0.474l-1.707-7.704c0.732-0.386 1.538-1.040 1.538-1.040s-3.195 1.638-14.664 0.838l8.312-6.325s-0.327-0.534-10.744-0.914c-0.697-0.026 8.493-1.83 15.281-0.305z"></path>
+        </svg>
+    </span>
+    <span class="item" data-type="wechat">
+        <svg viewBox="0 0 32 32" width="100%" height="100%">
+            <path d="M9.062 9.203c0-0.859-0.562-1.422-1.422-1.422-0.844 0-1.703 0.562-1.703 1.422 0 0.844 0.859 1.406 1.703 1.406 0.859 0 1.422-0.562 1.422-1.406zM20.672 17.125c0-0.562-0.562-1.125-1.422-1.125-0.562 0-1.125 0.562-1.125 1.125 0 0.578 0.562 1.141 1.125 1.141 0.859 0 1.422-0.562 1.422-1.141zM16.984 9.203c0-0.859-0.562-1.422-1.406-1.422-0.859 0-1.703 0.562-1.703 1.422 0 0.844 0.844 1.406 1.703 1.406 0.844 0 1.406-0.562 1.406-1.406zM26.906 17.125c0-0.562-0.578-1.125-1.422-1.125-0.562 0-1.125 0.562-1.125 1.125 0 0.578 0.562 1.141 1.125 1.141 0.844 0 1.422-0.562 1.422-1.141zM22.75 10.922c-0.359-0.047-0.719-0.063-1.094-0.063-5.375 0-9.625 4.016-9.625 8.953 0 0.828 0.125 1.625 0.359 2.375-0.359 0.031-0.703 0.047-1.063 0.047-1.422 0-2.547-0.281-3.969-0.562l-3.953 1.984 1.125-3.406c-2.828-1.984-4.531-4.547-4.531-7.656 0-5.391 5.094-9.625 11.328-9.625 5.563 0 10.453 3.391 11.422 7.953zM32 19.687c0 2.547-1.688 4.813-3.969 6.516l0.859 2.828-3.109-1.703c-1.141 0.281-2.281 0.578-3.406 0.578-5.391 0-9.625-3.688-9.625-8.219s4.234-8.219 9.625-8.219c5.094 0 9.625 3.688 9.625 8.219z"></path>
+        </svg>
+    </span>
+    <span class="item" data-type="weibo">
+        <svg viewBox="0 0 32 32" width="100%" height="100%">
+            <path d="M13.444 27.064c-5.3 0.525-9.875-1.875-10.219-5.35-0.344-3.481 3.675-6.719 8.969-7.244 5.3-0.525 9.875 1.875 10.212 5.35 0.35 3.481-3.669 6.725-8.963 7.244zM24.038 15.521c-0.45-0.137-0.762-0.225-0.525-0.819 0.512-1.287 0.563-2.394 0.006-3.188-1.038-1.481-3.881-1.406-7.137-0.037 0 0-1.025 0.444-0.762-0.363 0.5-1.613 0.425-2.956-0.356-3.737-1.769-1.769-6.469 0.069-10.5 4.1-3.013 3.006-4.763 6.212-4.763 8.981 0 5.287 6.787 8.506 13.425 8.506 8.7 0 14.494-5.056 14.494-9.069 0-2.431-2.044-3.806-3.881-4.375z"></path>
+            <path d="M29.819 5.833c-2.1-2.331-5.2-3.219-8.063-2.612v0c-0.663 0.144-1.081 0.794-0.938 1.45 0.144 0.662 0.788 1.081 1.45 0.938 2.038-0.431 4.238 0.2 5.731 1.856s1.9 3.913 1.256 5.888v0c-0.206 0.644 0.144 1.331 0.788 1.544 0.644 0.206 1.331-0.144 1.544-0.787v-0.006c0.9-2.762 0.331-5.938-1.769-8.269z"></path>
+            <path d="M26.588 8.752c-1.025-1.138-2.538-1.569-3.925-1.269-0.569 0.119-0.931 0.688-0.813 1.256 0.125 0.569 0.688 0.931 1.25 0.806v0c0.681-0.144 1.419 0.069 1.919 0.619 0.5 0.556 0.637 1.313 0.419 1.975v0c-0.175 0.55 0.125 1.15 0.681 1.331 0.556 0.175 1.15-0.125 1.331-0.681 0.438-1.356 0.163-2.906-0.863-4.037z"></path>
+            <path d="M13.738 20.771c-0.188 0.319-0.594 0.469-0.912 0.337-0.319-0.125-0.412-0.488-0.231-0.794 0.188-0.306 0.581-0.456 0.894-0.337 0.313 0.113 0.425 0.469 0.25 0.794zM12.044 22.933c-0.512 0.819-1.613 1.175-2.438 0.8-0.813-0.369-1.056-1.319-0.544-2.119 0.506-0.794 1.569-1.15 2.388-0.806 0.831 0.356 1.1 1.3 0.594 2.125zM13.969 17.146c-2.519-0.656-5.369 0.6-6.463 2.819-1.119 2.262-0.037 4.781 2.506 5.606 2.638 0.85 5.75-0.456 6.831-2.894 1.069-2.394-0.262-4.85-2.875-5.531z"></path>
+        </svg>
+    </span>
+    <span class="item" data-type="twitter">
+        <svg viewBox="0 0 32 32" width="100%" height="100%">
+            <path d="M32.003 6.075c-1.175 0.525-2.444 0.875-3.769 1.031 1.356-0.813 2.394-2.1 2.887-3.631-1.269 0.75-2.675 1.3-4.169 1.594-1.2-1.275-2.906-2.069-4.794-2.069-3.625 0-6.563 2.938-6.563 6.563 0 0.512 0.056 1.012 0.169 1.494-5.456-0.275-10.294-2.888-13.531-6.862-0.563 0.969-0.887 2.1-0.887 3.3 0 2.275 1.156 4.287 2.919 5.463-1.075-0.031-2.087-0.331-2.975-0.819 0 0.025 0 0.056 0 0.081 0 3.181 2.263 5.838 5.269 6.437-0.55 0.15-1.131 0.231-1.731 0.231-0.425 0-0.831-0.044-1.237-0.119 0.838 2.606 3.263 4.506 6.131 4.563-2.25 1.762-5.075 2.813-8.156 2.813-0.531 0-1.050-0.031-1.569-0.094 2.913 1.869 6.362 2.95 10.069 2.95 12.075 0 18.681-10.006 18.681-18.681 0-0.287-0.006-0.569-0.019-0.85 1.281-0.919 2.394-2.075 3.275-3.394z"></path>
+        </svg>
+    </span>
+    <span class="item__qr"></span>
+</div>        </div>
+        <div class="wrapper">
+            <section class="vditor-reset articles article__content">
+                <p><a href="https://www.zhoujie218.top/wp-content/uploads/2020/09/unnamed-file-34.png" target="_blank"><img src="https://www.zhoujie218.top/wp-content/uploads/2020/09/unnamed-file-34-1024x286.png" alt=""></a></p>
+<p><a href="https://camo.githubusercontent.com/b0224997019dec4e51d692c722ea9bee2818c837/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f6c6963656e73652f6d6173686170652f6170697374617475732e737667" target="_blank"><img src="https://camo.githubusercontent.com/b0224997019dec4e51d692c722ea9bee2818c837/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f6c6963656e73652f6d6173686170652f6170697374617475732e737667" alt="的GitHub"></a></p>
+<ul>
+<li>
+<p>ServerStatus-Toyo版是一个酷炫高逼格的云探针，云监控，服务器云监控，多服务器探针〜，该云监控（云探针）是ServerStatus（<a href="https://github.com/tenyue/ServerStatus" target="_blank">https://github.com/tenyue/ ServerStatus</a>）项目的优化/修改版。</p>
+</li>
+<li>
+<p>在线演示：<a href="https://tz.toyoo.pw/" target="_blank">https</a>&nbsp;:&nbsp;<a href="https://tz.toyoo.pw/" target="_blank">//tz.toyoo.pw</a></p>
+</li>
+<li>
+<p>我的博客：<a href="https://doub.io/shell-jc3/" target="_blank">https</a>&nbsp;:&nbsp;<a href="https://doub.io/shell-jc3/" target="_blank">//doub.io/shell-jc3/</a></p>
+</li>
+</ul>
+<h1 id="toc_h1_0"><a href="https://github.com/vbskycn/ServerStatus-Toyo#%E7%9B%AE%E5%BD%95%E4%BB%8B%E7%BB%8D" target="_blank"></a>目录介绍：</h1>
+<ul>
+<li>
+<p>客户客户端文件</p>
+</li>
+<li>
+<p>服务器服务端文件</p>
+</li>
+<li>
+<p>网站文件</p>
+</li>
+</ul>
+<h1 id="toc_h1_1"><a href="https://github.com/vbskycn/ServerStatus-Toyo#%E6%9B%B4%E6%96%B0%E8%AF%B4%E6%98%8E" target="_blank"></a>更新说明：</h1>
+<ul>
+<li>
+<p>2018.08.21，修改新样式，效果见<a href="https://tz.toyoo.pw/" target="_blank">https://tz.toyoo.pw</a></p>
+</li>
+<li>
+<p>2017.10.12，负载优化，并支持CentOS6系统</p>
+</li>
+<li>
+<p>2017.10.10，修改负载的增量：当前服务器上链接SSR等软件的IP总和（只要软件监听IPv6那么就能统计，例如SSH）</p>
+</li>
+<li>
+<p>2017.04.30，优化手机显示式样</p>
+</li>
+<li>
+<p>2017.04.29，移除主机名设定</p>
+</li>
+<li>
+<p>2017.04.27，增加一键部署脚本</p>
+</li>
+</ul>
+<h1 id="toc_h1_2"><a href="https://github.com/vbskycn/ServerStatus-Toyo#%E5%AE%89%E8%A3%85%E6%95%99%E7%A8%8B" target="_blank"></a>安装教程：</h1>
+<p><a href="http://www.nbdog.com/8364.html" target="_blank">http://www.nbdog.com/8364.html</a></p>
+<pre><code>bash&nbsp;&lt;(curl&nbsp;-s&nbsp;-L&nbsp;https://git.io/v2ray.sh)
+
+如果提示 curl: command not found ，那是因为你的小鸡没装 Curl
+ubuntu/debian 系统安装 Curl 方法:&nbsp;&lt;code&gt;apt-get update -y &amp;&amp; apt-get install curl -y&lt;/code&gt; centos 系统安装 Curl 方法:&nbsp;&lt;code&gt;yum update -y &amp;&amp; yum install curl -y&lt;/code&gt; 安装好 curl 之后就能安装脚本了
+</code></pre>
+<p>执行下面的代码下载并运行脚本。</p>
+<pre><code>wget -N --no-check-certificate https://softs.loan/Bash/status.sh &lt;span class="pl-k"&gt;&amp;&amp;&lt;/span&gt; chmod + x status.sh
+
+&lt;span class="pl-c"&gt;＃如果上面这个脚本无法下载，尝试使用备用下载：&lt;/span&gt; 
+wget -N --no-check-certificate https://raw.githubusercontent.com/ToyoDAdoubi/doubi/master/status.sh&lt;span class="pl-k"&gt; &amp;&amp;&lt;/span&gt; chmod + x status.sh
+</code></pre>
+<p>下载脚本后，根据需要安装客户端或服务端：</p>
+<pre><code>&lt;span class="pl-c"&gt;＃显示客户端管理菜单&lt;/span&gt;
+bash status.sh c
+ 
+&lt;span class="pl-c"&gt;＃显示服务端管理菜单&lt;/span&gt; 
+bash status.sh
+</code></pre>
+<p>运行脚本后会出现脚本操作菜单，选择并输入<code>1</code>就会开始安装。</p>
+<p>一开始会提示你输入网站服务器的域名和端口，如果没有域名可以直接回车代表使用<code>&nbsp;本机IP:8888</code></p>
+<h2 id="toc_h2_3"><a href="https://github.com/vbskycn/ServerStatus-Toyo#%E7%AE%80%E5%8D%95%E6%AD%A5%E9%AA%A4" target="_blank"></a>简单步骤：</h2>
+<p>首先安装服务端，安装过程中会提示：</p>
+<pre><code>是否由脚本自动配置HTTP服务（服务端的在线监控网站）[Y / n]
+ 
+&lt;span class="pl-c"&gt;＃如果你不懂，那就直接回车，如果你想用其他的HTTP服务自己配置，那么请输入Ñ并回车。&lt;/span&gt;
+&lt;span class="pl-c"&gt;＃注意，当你曾经安装过服务端，同时没有卸载球童（HTTP服务） ，那么重新安装服务端的时候，请输入n并回车。&lt;/span&gt;
+</code></pre>
+<p>然后添加或修改初始示例的例程配置，注意用户名每个例程配置都不能重复，其他的参数都无所谓了。</p>
+<p>然后安装客户端，根据提示填充服务端的IP和前面添加/修改对应的RPC用户名和密码（用于和服务端验证），然后启动就好了，有问题请贴出详细步骤+日志（如果有）联系我。</p>
+<h1 id="toc_h1_4"><a href="https://github.com/vbskycn/ServerStatus-Toyo#%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E" target="_blank"></a>使用说明：</h1>
+<p>进入下载脚本的目录并运行脚本：</p>
+<pre><code>&lt;span class="pl-c"&gt;＃客户端管理菜单&lt;/span&gt;
+./status.sh c
+&lt;span class="pl-c"&gt;＃服务端管理菜单&lt;/span&gt; 
+./status.sh小号
+</code></pre>
+<p>然后选择你要执行的选项即可。</p>
+<pre><code>ServerStatus一键安装管理脚本[vx.xx]
+-东洋&lt;span class="pl-k"&gt;| &lt;/span&gt;doub.io/shell-jc3-
+ 
+0.升级脚本
+————————————
+1.安装服务端
+2.卸载服务端
+————————————
+3.启动服务端
+4.停止服务端
+5.重新启动服务端
+————————————
+6.设置服务端配置
+7.查看服务端信息
+8.查看服务端日志
+————————————
+9.切换为客户端菜单
+ 
+当前状态：服务端已安装并已启动
+ 
+请输入数字[0-9]：
+</code></pre>
+<h1 id="toc_h1_5"><a href="https://github.com/vbskycn/ServerStatus-Toyo#%E5%85%B6%E4%BB%96%E6%93%8D%E4%BD%9C" target="_blank"></a>其他操作</h1>
+<h3 id="toc_h3_6"><a href="https://github.com/vbskycn/ServerStatus-Toyo#%E5%AE%A2%E6%88%B7%E7%AB%AF" target="_blank"></a>客户端：</h3>
+<p>启动：服务状态-客户启动</p>
+<p>停止：服务状态-客户端停止</p>
+<p>重启：服务状态-客户端重启</p>
+<p>查看状态：服务状态-客户状态</p>
+<h3 id="toc_h3_7"><a href="https://github.com/vbskycn/ServerStatus-Toyo#%E6%9C%8D%E5%8A%A1%E7%AB%AF" target="_blank"></a>服务端：</h3>
+<p>启动：服务状态服务器启动</p>
+<p>停止：服务状态-服务器停止</p>
+<p>重启：服务状态-服务器重启</p>
+<p>查看状态：服务状态-服务器状态</p>
+<h3 id="toc_h3_8"><a href="https://github.com/vbskycn/ServerStatus-Toyo#caddyhttp%E6%9C%8D%E5%8A%A1" target="_blank"></a>球童（HTTP服务）：</h3>
+<p>启动：服务盒启动</p>
+<p>停止：服务车停</p>
+<p>重启：服务盒重启</p>
+<p>查看状态：服务车状态</p>
+<p>球童配置文件：/ usr / local / caddy / caddy</p>
+<p>默认脚本只能一开始安装的时候设置配置文件，更多的Caddy使用方法，可以参考这些教程：<a href="https://doub.io/search/caddy" target="_blank">https</a>&nbsp;:&nbsp;<a href="https://doub.io/search/caddy" target="_blank">//doub.io/search/caddy</a></p>
+<p>——————————————————————————————————————</p>
+<p>安装目录：/ usr / local / ServerStatus</p>
+<p>网页文件：/ usr / local / ServerStatus / web</p>
+<p>配置文件：/usr/local/ServerStatus/server/config.json</p>
+<p>客户端查看日志：tail -f tmp / serverstatus_client.log</p>
+<p>服务端查看日志：tail -f /tmp/serverstatus_server.log</p>
+<h1 id="toc_h1_9"><a href="https://github.com/vbskycn/ServerStatus-Toyo#%E5%85%B6%E4%BB%96%E8%AF%B4%E6%98%8E" target="_blank"></a>其他说明</h1>
+<p>网络实时流量单位为：G = GB / s，M = MB / s，K = KB / s</p>
+<p>服务器总流量单位为：T = TB，G = GB，M = MB，K = KB</p>
+<h3 id="toc_h3_10"><a href="https://github.com/vbskycn/ServerStatus-Toyo#centos7%E7%B3%BB%E7%BB%9F-%E8%B4%9F%E8%BD%BD%E6%98%BE%E7%A4%BA%E5%BC%82%E5%B8%B8%E7%9A%84%E9%97%AE%E9%A2%98" target="_blank"></a>CentOS7系统负载显示异常的问题</h3>
+<p>CentOS7系统默认可能没有安装netstat依赖，因此会造成IP检测（负载）错误，手动安装即可：&nbsp;<code>yum install net-tools -y</code></p>
+<h1 id="toc_h1_11"><a href="https://github.com/vbskycn/ServerStatus-Toyo#%E7%9B%B8%E5%85%B3%E5%BC%80%E6%BA%90%E9%A1%B9%E7%9B%AE%E6%84%9F%E8%B0%A2" target="_blank"></a>相关开源项目，感谢：</h1>
+<ul>
+<li>
+<p>ServerStatus：<a href="https://github.com/BotoX/ServerStatus" target="_blank">https</a>&nbsp;:&nbsp;<a href="https://github.com/BotoX/ServerStatus" target="_blank">//github.com/BotoX/ServerStatus</a></p>
+</li>
+<li>
+<p>mojeda：<a href="https://github.com/mojeda" target="_blank">https</a>：<a href="https://github.com/mojeda" target="_blank">//github.com/mojeda</a></p>
+</li>
+<li>
+<p>mojeda的ServerStatus：<a href="https://github.com/mojeda/ServerStatus" target="_blank">https</a>&nbsp;:&nbsp;<a href="https://github.com/mojeda/ServerStatus" target="_blank">//github.com/mojeda/ServerStatus</a></p>
+</li>
+<li>
+<p>BlueVM的项目：<a href="http://www.lowendtalk.com/discussion/comment/169690#Comment_169690" target="_blank">http</a>&nbsp;:&nbsp;<a href="http://www.lowendtalk.com/discussion/comment/169690#Comment_169690" target="_blank">//www.lowendtalk.com/discussion/comment/169690#Comment_169690</a></p>
+</li>
+</ul>
+                    <div>
+                        <hr>
+
+标题：ServerStatus-Toyo中文云探针安装说明<br>
+作者：<a href="https://vbskycn.github.io" target="_blank">vbskycn</a><br>
+地址：<a href="https://vbskycn.github.io/articles/2019/12/01/1575180556118.html" target="_blank">https://vbskycn.github.io/articles/2019/12/01/1575180556118.html</a><br>
+
+<!-- 签名档内可使用 HTML、JavaScript -->
+<br>
+                    </div>
+            </section>
+        </div>
+
+    </div>
+        <div class="post__toc">
+<ul class="article__toc">
+        <li class="toc__h1">
+            <a href="#toc_h1_0">目录介绍：</a>
+        </li>
+        <li class="toc__h1">
+            <a href="#toc_h1_1">更新说明：</a>
+        </li>
+        <li class="toc__h1">
+            <a href="#toc_h1_2">安装教程：</a>
+        </li>
+        <li class="toc__h2">
+            <a href="#toc_h2_3">简单步骤：</a>
+        </li>
+        <li class="toc__h1">
+            <a href="#toc_h1_4">使用说明：</a>
+        </li>
+        <li class="toc__h1">
+            <a href="#toc_h1_5">其他操作</a>
+        </li>
+        <li class="toc__h3">
+            <a href="#toc_h3_6">客户端：</a>
+        </li>
+        <li class="toc__h3">
+            <a href="#toc_h3_7">服务端：</a>
+        </li>
+        <li class="toc__h3">
+            <a href="#toc_h3_8">球童（HTTP服务）：</a>
+        </li>
+        <li class="toc__h1">
+            <a href="#toc_h1_9">其他说明</a>
+        </li>
+        <li class="toc__h3">
+            <a href="#toc_h3_10">CentOS7系统负载显示异常的问题</a>
+        </li>
+        <li class="toc__h1">
+            <a href="#toc_h1_11">相关开源项目，感谢：</a>
+        </li>
+</ul>        </div>
+        <div class="wrapper">
+            <div id="gitalk-container"></div>
+            <div id="vcomment"
+                 style="    margin-bottom: 40px; margin-top: 80px;
+        border: 1px solid rgba(255,255,255,0.8);
+        border-radius: 5px;
+        background: rgba(255,255,255,0.9);
+        box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+        padding: 20px;"
+                 data-name="vbskycn" data-postId="1575180556118"></div>
+            <div id="b3logsolocomments"></div>
+        </div>
+    <div class="article__bottom">
+        <div class="wrapper">
+            <div class="fn__flex">
+                <div class="item" id="randomArticles"></div>
+                <div class="item" id="relevantArticles"></div>
+            </div>
+        </div>
+    </div>
+    
+</div>
+<script type="text/javascript"
+        src="https://cdn.jsdelivr.net/gh/88250/solo@5e2ac70/src/main/resources/skins/Bubble/js/TweenMax.min.js?1634643031572"
+        charset="utf-8"></script>
+<footer class="footer">
+    <div class="wrapper">
+            <a href="https://ld246.com/member/vbskycn"
+       title="https://ld246.com/member/vbskycn"
+       class="user__site"
+       target="_blank" rel="noopener nofollow">
+        <svg viewBox="0 0 32 32" width="100%" height="100%">
+            <path fill="#d23f31" style="fill: var(--color1, #d23f31)" d="M5.787 17.226h17.033l5.954 9.528c0.47 0.752 0.003 1.361-1.042 1.361h-15.141z"></path>
+            <path d="M10.74 3.927h17.033c1.045 0 1.512 0.609 1.042 1.361l-5.954 9.528h-19.872l6.379-10.209c0.235-0.376 0.849-0.681 1.372-0.681z"></path>
+            <path d="M2.953 17.226h2.839l6.804 10.889h-1.892c-0.523 0-1.137-0.305-1.372-0.681z"></path>
+        </svg>
+    </a>
+
+        <a href="https://github.com/vbskycn"
+           title="https://github.com/vbskycn"
+           class="user__site"
+           target="_blank" rel="noopener nofollow">
+            <svg viewBox="0 0 32 32" width="100%" height="100%">
+                <path d="M16 0.331c-8.836 0-16 7.163-16 16 0 7.069 4.585 13.067 10.942 15.182 0.8 0.148 1.094-0.347 1.094-0.77 0-0.381-0.015-1.642-0.022-2.979-4.452 0.968-5.391-1.888-5.391-1.888-0.728-1.849-1.776-2.341-1.776-2.341-1.452-0.993 0.11-0.973 0.11-0.973 1.606 0.113 2.452 1.649 2.452 1.649 1.427 2.446 3.743 1.739 4.656 1.33 0.143-1.034 0.558-1.74 1.016-2.14-3.554-0.404-7.29-1.777-7.29-7.907 0-1.747 0.625-3.174 1.649-4.295-0.166-0.403-0.714-2.030 0.155-4.234 0 0 1.344-0.43 4.401 1.64 1.276-0.355 2.645-0.532 4.005-0.539 1.359 0.006 2.729 0.184 4.008 0.539 3.054-2.070 4.395-1.64 4.395-1.64 0.871 2.204 0.323 3.831 0.157 4.234 1.026 1.12 1.647 2.548 1.647 4.295 0 6.145-3.743 7.498-7.306 7.895 0.574 0.497 1.085 1.47 1.085 2.963 0 2.141-0.019 3.864-0.019 4.391 0 0.426 0.288 0.925 1.099 0.768 6.354-2.118 10.933-8.113 10.933-15.18 0-8.837-7.164-16-16-16z"></path>
+            </svg>
+        </a>
+
+        <a href="tencent://message/?uin=88164962"
+           title="88164962"
+           target="_blank"
+           class="user__site" rel="noopener nofollow">
+            <svg viewBox="0 0 32 32" width="100%" height="100%">
+                <path d="M4.821 14.393c-0.125-0.304-0.143-0.607-0.143-0.929 0-0.5 0.321-1.304 0.625-1.679-0.018-0.464 0.179-1.411 0.536-1.714 0-3.304 2.554-7.464 5.536-8.893 1.839-0.875 3.768-1.179 5.786-1.179 1.571 0 3.286 0.375 4.75 0.982 4.196 1.768 5.143 5.054 6.036 9.25l0.018 0.089c0.518 0.786 0.982 1.714 0.982 2.679 0 0.482-0.321 0.964-0.321 1.393 0 0.036 0.107 0.179 0.125 0.214 1.536 2.268 2.929 4.732 2.929 7.554 0 0.625-0.339 2.804-1.339 2.804-0.696 0-1.464-1.696-1.714-2.161-0.018-0.018-0.036-0.018-0.054-0.018l-0.089 0.071c-0.571 1.482-1.196 2.875-2.357 3.982 1.018 0.982 2.661 0.893 2.964 2.589-0.089 0.196-0.054 0.411-0.196 0.607-1.018 1.536-3.75 1.732-5.393 1.732-2.179 0-3.946-0.571-6-1.179-0.429-0.125-1.071-0.054-1.536-0.107-1.089 1.196-3.75 1.518-5.286 1.518-1.357 0-6.607-0.089-6.607-2.411 0-1 0.214-1.286 0.911-1.929 0.554-0.107 0.964-0.411 1.607-0.446 0.089 0 0.161-0.018 0.25-0.036 0.018-0.018 0.036-0.018 0.036-0.071l-0.036-0.054c-1.232-0.286-2.964-3.393-3.232-4.679l-0.089-0.054c-0.125 0-0.179 0.268-0.214 0.357-0.393 0.911-1.321 1.893-2.357 2h-0.018c-0.143 0-0.089-0.143-0.196-0.179-0.25-0.589-0.411-1.125-0.411-1.786 0-3.571 1.714-6.214 4.5-8.321z"></path>
+            </svg>
+        </a>
+ <br>
+        &copy; 2021
+        <a href="https://vbskycn.github.io">周杰个人博客</a>
+        <script type="text/javascript" src="https://js.users.51.la/20428949.js"></script>
+        <span class="footer__heart">❤️</span>
+    </div>
+</footer>
+<svg class="side__top" id="sideTop" version="1.1" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+    <path d="M26.562 13.958c0 0.72 0.583 1.303 1.303 1.303s1.303-0.583 1.303-1.303v0c0-0.72-0.583-1.303-1.303-1.303s-1.303 0.583-1.303 1.303v0zM23.305 10.7c0 0 0 0 0 0 0 0.72 0.583 1.303 1.303 1.303s1.303-0.583 1.303-1.303c0-0 0-0 0-0v0c0-0 0-0 0-0 0-0.72-0.583-1.303-1.303-1.303s-1.303 0.583-1.303 1.303c0 0 0 0 0 0v0zM20.022 7.417c0 0 0 0 0 0 0 0.72 0.583 1.303 1.303 1.303s1.303-0.583 1.303-1.303c0-0 0-0 0-0v0c0-0 0-0 0-0 0-0.72-0.583-1.303-1.303-1.303s-1.303 0.583-1.303 1.303c0 0 0 0 0 0v0zM29.67 0h-27.339c-0.677 0-1.228 0.551-1.228 1.228s0.551 1.228 1.228 1.228h11.151l-10.725 10.725c-0.476 0.476-0.476 1.253 0 1.729 0.226 0.226 0.551 0.351 0.852 0.351s0.626-0.125 0.852-0.351l10.074-10.074v25.936c0 0.677 0.551 1.228 1.228 1.228s1.228-0.551 1.228-1.228v-26.011c0.476 0.426 1.203 0.426 1.679-0.050s0.476-1.253 0-1.729l-0.576-0.576h11.577c0.677 0 1.228-0.551 1.228-1.228 0-0.626-0.551-1.178-1.228-1.178z"></path>
+</svg>
+<script>
+  var Label = {
+    speech: true,
+    servePath: "https://vbskycn.github.io",
+    staticServePath: "https://cdn.jsdelivr.net/gh/88250/solo@5e2ac70/src/main/resources",
+    luteAvailable: false,
+    hljsStyle: 'github',
+    langLabel: "zh_CN",
+    version: "4.3.1",
+    staticSite: true,
+    showCodeBlockLn: false,
+    articleId: "1575180556118",
+  }
+</script>
+<script type="text/javascript"
+        src="https://cdn.jsdelivr.net/gh/88250/solo@5e2ac70/src/main/resources/skins/Bubble/js/common.min.js?1634643031572"
+        charset="utf-8"></script>
+<script type="text/javascript"
+        src="https://cdn.jsdelivr.net/gh/88250/solo@5e2ac70/src/main/resources/skins/Bubble/js/circleMagic.min.js?1634643031572"
+        charset="utf-8"></script>
+
+    <svg viewBox="0 0 32 32" width="100%" height="100%" class="side__top side__top--toc">
+        <path d="M30 18h-28c-1.1 0-2-0.9-2-2s0.9-2 2-2h28c1.1 0 2 0.9 2 2s-0.9 2-2 2zM30 6.25h-28c-1.1 0-2-0.9-2-2s0.9-2 2-2h28c1.1 0 2 0.9 2 2s-0.9 2-2 2zM2 25.75h28c1.1 0 2 0.9 2 2s-0.9 2-2 2h-28c-1.1 0-2-0.9-2-2s0.9-2 2-2z"></path>
+    </svg>
+
+<script type="text/javascript">
+    Util.addScript('https://cdn.jsdelivr.net/gh/88250/solo@5e2ac70/src/main/resources/js/page.min.js?1634643031572', 'soloPageScript')
+    var page = new Page({
+        "commentContentCannotEmptyLabel": "评论不能为空",
+        "oId": "1575180556118",
+        "blogHost": "https://vbskycn.github.io",
+        "randomArticles1Label": "随机阅读：",
+        "externalRelevantArticles1Label": "站外相关阅读："
+    });
+    $(document).ready(function () {
+        page.load();
+    page.tips.externalRelevantArticlesDisplayCount = "0";
+        page.loadRandomArticles('<h3>随机阅读</h3>');
+        page.loadRelevantArticles('1575180556118', '<h3>相关阅读</h3>');
+    Skin.initArticle()
+    });
+</script>
+
+</body>
+</html>
+
+<!-- Generated by Latke (https://github.com/88250/latke) in 78ms, 2021/10/28 11:38:51 -->
